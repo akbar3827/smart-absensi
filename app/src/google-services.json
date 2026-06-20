@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "679926317709",
+    "project_id": "smartabsen-26c60",
+    "storage_bucket": "smartabsen-26c60.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:679926317709:android:5351d287bc7b0c44ec58c4",
+        "android_client_info": {
+          "package_name": "com.learn.smartabsensi"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC6NjOvRCMIgQlOP9fqOup2rtg5I7TJMig"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
