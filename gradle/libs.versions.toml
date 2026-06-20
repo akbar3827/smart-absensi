@@ -1,6 +1,7 @@
 [versions]
 agp = "9.2.1"
 coilCompose = "3.5.0"
+constraintlayoutCompose = "1.1.1"
 converterGson = "3.0.0"
 coreKtx = "1.19.0"
 firebaseBom = "34.14.1"
@@ -21,6 +22,7 @@ service = "4.4.4"
 firebaseFirestoreKtx = "26.3.0"
 
 [libraries]
+androidx-constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutCompose" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilCompose" }
