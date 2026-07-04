@@ -4,13 +4,15 @@ import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.learn.smartabsensi.features.data.models.NewsModel
 import kotlinx.coroutines.tasks.await
+import javax.inject.Inject
 
 
-class NewsRepository {
+class NewsRepository @Inject constructor(
+    private val db: FirebaseFirestore
+) {
     companion object {
         val COLLECTION_NAME = "news"
     }
-    private val db = FirebaseFirestore.getInstance()
 
     suspend fun getNews(): Result<List<NewsModel>> {
         return try {

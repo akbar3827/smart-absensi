@@ -2,4 +2,10 @@
 <resources>
 
     <style name="Theme.SmartAbsensi" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="Theme.SmartAbsensi.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/white</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/icon_splash</item>
+        <item name="postSplashScreenTheme">@style/Theme.SmartAbsensi</item>
+    </style>
 </resources>

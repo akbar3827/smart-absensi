@@ -4,13 +4,15 @@ import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.learn.smartabsensi.features.data.models.FoodModel
 import kotlinx.coroutines.tasks.await
+import javax.inject.Inject
 
-class FoodRepository {
+
+class FoodRepository @Inject constructor(
+    private val db: FirebaseFirestore
+) {
     companion object {
         private val COLLECTION_NAME = "canteen_food"
     }
-
-    private val db = FirebaseFirestore.getInstance()
 
     suspend fun getFood(): Result<List<FoodModel>> {
         return try {

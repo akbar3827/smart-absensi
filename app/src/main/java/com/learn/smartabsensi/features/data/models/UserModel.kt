@@ -1,21 +1,17 @@
 package com.learn.smartabsensi.features.data.models
 
+
 data class UserModel(
     val uid: String = "",
     val name: String = "",
     val email: String = "",
-    val photoProfile: String = "",
-    val school: String = "",
-    val hadir: String = "0",
-    val sakit: String = "0",
-    val izin: String = "0",
-    val dispen: String = "0",
-    val alfa: String = "0",
+    val nisn: String = "",
+    val photoUrl: String = "",
+    val classRoom: String = "",
+    val className: String = "",
+    val gender: String = "",
     val createdAt: String = "",
-    val attendence: AttendenceModel = AttendenceModel()
+    val favoriteFood: FoodFavModel = FoodFavModel(),
+    val cartFood: FoodCartModel = FoodCartModel()
 )
 
-data class AttendenceModel(
-    val status: String = "",
-    val checkIn: String = ""
-)

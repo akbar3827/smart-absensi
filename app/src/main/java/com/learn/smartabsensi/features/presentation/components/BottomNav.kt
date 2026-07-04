@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.learn.smartabsensi.core.themes.Indigo
 import com.learn.smartabsensi.core.utils.BottomBarDestination
 import com.learn.smartabsensi.core.themes.Primary
 import com.ramcosta.composedestinations.utils.currentDestinationAsState
@@ -26,22 +27,23 @@ fun BottomNav(navController: NavController) {
     val currentDestination = navController.currentDestinationAsState().value
     NavigationBar(
         modifier = Modifier
-            .padding(bottom = 16.dp, start = 24.dp, end = 24.dp)
+            .padding(bottom = 20.dp, start = 24.dp, end = 24.dp)
             .height(60.dp)
             .shadow(
                 elevation = 5.dp,
                 shape = CircleShape,
                 clip = false,
-                ambientColor = Primary.copy(alpha = 0.8f),
-                spotColor = Primary.copy(alpha = 0.5f)
+                ambientColor = Indigo,
+                spotColor = Indigo.copy(alpha = 0.4f)
             )
             .clip(shape = CircleShape),
         containerColor = Color.White,
-        contentColor = Color.DarkGray,
+        contentColor = Indigo,
         windowInsets = WindowInsets(0,0,0,0)
     ) {
         BottomBarDestination.entries.forEach {
             val isCurrentDestOnBackStack = navController.isRouteOnBackStackAsState(it.destination).value
+
 
             NavigationBarItem(
                 selected = currentDestination == it.destination,
@@ -69,7 +71,6 @@ fun BottomNav(navController: NavController) {
                         modifier = Modifier.size(28.dp)
                     )},
                 alwaysShowLabel = false
-
             )
         }
     }

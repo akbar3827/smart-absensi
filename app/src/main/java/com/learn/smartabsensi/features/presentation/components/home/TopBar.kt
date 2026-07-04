@@ -1,6 +1,5 @@
-package com.learn.smartabsensi.features.presentation.components
+package com.learn.smartabsensi.features.presentation.components.home
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -9,7 +8,6 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -28,28 +26,29 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil3.compose.AsyncImage
 import com.learn.smartabsensi.R
-import com.learn.smartabsensi.core.themes.Primary
+import com.learn.smartabsensi.core.themes.Indigo
 import com.learn.smartabsensi.core.themes.PrimaryDark
 import com.learn.smartabsensi.core.themes.TextPrimary
-import com.learn.smartabsensi.core.themes.TextSecondary
+import com.learn.smartabsensi.features.data.models.UserModel
 
 @Composable
 fun TopBar(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    userData: UserModel
 ) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .fillMaxWidth()
-            .height(60.dp)
-            .background(Color.White.copy(alpha = 0.1f))
-            .padding(horizontal = 24.dp, vertical = 8.dp)
+            .height(70.dp)
+            .padding(horizontal = 24.dp, vertical = 12.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            Image(
-                painter = painterResource(id = R.drawable.profile_pict),
+            AsyncImage(
+                model = userData.photoUrl ,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -62,7 +61,7 @@ fun TopBar(
                     .shadow(
                         elevation = 4.dp,
                         shape = CircleShape,
-                        ambientColor = PrimaryDark,
+                        ambientColor = Indigo,
                         spotColor = PrimaryDark.copy(alpha = 0.5f)
                     )
                     .padding(3.dp)
@@ -72,7 +71,7 @@ fun TopBar(
                 text = buildAnnotatedString {
                     withStyle(
                         style = SpanStyle(
-                            color = Primary
+                            color = Indigo
                         )
                     ) {
                         append("Smart")
@@ -87,13 +86,13 @@ fun TopBar(
         Icon(
             painter = painterResource(id = R.drawable.ic_bell),
             contentDescription = "bell",
-            tint = PrimaryDark,
+            tint = Indigo,
             modifier = Modifier.padding(2.dp).aspectRatio(1f, matchHeightConstraintsFirst = true)
                 .shadow(
                     elevation = 3.dp,
                     shape = RoundedCornerShape(12.dp),
-                    ambientColor = Color.DarkGray,
-                    spotColor = Color.DarkGray.copy(alpha = 0.5f)
+                    ambientColor = Indigo,
+                    spotColor = Indigo.copy(alpha = 0.5f)
                 )
                 .background(color = Color.White, shape = RoundedCornerShape(12.dp)).padding(10.dp)
         )
