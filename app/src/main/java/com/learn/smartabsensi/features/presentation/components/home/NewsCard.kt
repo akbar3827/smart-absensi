@@ -1,4 +1,4 @@
-package com.learn.smartabsensi.features.presentation.components
+package com.learn.smartabsensi.features.presentation.components.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -25,7 +25,6 @@ import coil3.compose.AsyncImage
 import com.learn.smartabsensi.core.themes.BlueWithe
 import com.learn.smartabsensi.core.themes.Green
 import com.learn.smartabsensi.core.themes.GreenDark
-import com.learn.smartabsensi.core.themes.Primary
 import com.learn.smartabsensi.core.themes.PrimaryDark
 import com.learn.smartabsensi.core.themes.TextPrimary
 import com.learn.smartabsensi.core.themes.TextSecondary

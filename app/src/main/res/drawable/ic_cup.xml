@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Trophy Bowl -->
+    <path
+        android:pathData="M8,4H16V9C16,11.2 14.2,13 12,13C9.8,13 8,11.2 8,9V4Z"
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="@color/black"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"/>
+
+    <!-- Left Handle -->
+    <path
+        android:pathData="M8,5H6C4.9,5 4,5.9 4,7V7.5C4,9.4 5.6,11 7.5,11H8"
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="@color/black"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"/>
+
+    <!-- Right Handle -->
+    <path
+        android:pathData="M16,5H18C19.1,5 20,5.9 20,7V7.5C20,9.4 18.4,11 16.5,11H16"
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="@color/black"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"/>
+
+    <!-- Stem -->
+    <path
+        android:pathData="M12,13V17"
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="@color/black"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round"/>
+
+    <!-- Base -->
+    <path
+        android:pathData="M9,20H15"
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="@color/black"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round"/>
+
+    <path
+        android:pathData="M10,17H14V20H10Z"
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="@color/black"
+        android:strokeWidth="1.5"
+        android:strokeLineJoin="round"/>
+
+</vector>

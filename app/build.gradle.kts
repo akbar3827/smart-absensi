@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.parcelize)
     alias(libs.plugins.google.service)
+    alias(libs.plugins.google.dagger.hilt)
 }
 
 android {
@@ -30,8 +31,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     buildFeatures {
         compose = true
@@ -58,7 +59,13 @@ dependencies {
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.firestore)
     implementation(libs.androidx.constraintlayout.compose)
+    implementation(libs.androidx.core.splashscreen)
+    implementation(libs.firebase.auth)
+    implementation(libs.hilt.android)
+    implementation(libs.hilt.navigation.compose)
 
+    ksp(libs.hilt.android.compiler)
+    ksp(libs.kotlinMetadataJvm)
     ksp(libs.ksp)
 
     testImplementation(libs.junit)

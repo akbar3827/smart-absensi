@@ -4,23 +4,31 @@ import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.learn.smartabsensi.features.data.models.UserModel
 import kotlinx.coroutines.tasks.await
+import javax.inject.Inject
 
-class UserRepository {
+class UserRepository @Inject constructor(
+    private val db: FirebaseFirestore
+) {
     companion object {
-        val COLLECTION_NAME = "users"
+        val COLLECTION_NAME = "students"
     }
-    private val db = FirebaseFirestore.getInstance()
 
-    suspend fun getUser(uid: String): Result<UserModel> {
+    suspend fun getUser(uid: String?): Result<UserModel> {
         return try {
-            val snapshot = db
-                .collection(COLLECTION_NAME)
-                .document(uid)
-                .get()
-                .await()
+            if (uid != null) {
+                val snapshotRef = db
+                    .collection(COLLECTION_NAME)
+                    .document(uid)
 
-            val users = snapshot.toObject(UserModel::class.java) ?: throw Exception("User not found")
-            Result.success(users)
+                val userSnapshot = snapshotRef.get().await()
+                val user = userSnapshot.toObject(
+                    UserModel::class.java
+                ) ?: throw Exception("User not found")
+
+                Result.success(user)
+            } else {
+                Result.failure(Exception("User not found"))
+            }
         } catch (e: Exception) {
             Log.e("UsersRepository", "Error fetching users", e)
             Result.failure(e)

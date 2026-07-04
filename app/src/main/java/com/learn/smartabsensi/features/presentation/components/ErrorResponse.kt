@@ -1,0 +1,32 @@
+package com.learn.smartabsensi.features.presentation.components
+
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
+import com.learn.smartabsensi.R
+import com.learn.smartabsensi.core.themes.Background
+
+@Composable
+fun ErrorResponse(
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .background(Background),
+        contentAlignment = Alignment.Center
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.not_found),
+            contentDescription = "Data not found",
+            modifier = Modifier.size(200.dp)
+        )
+    }
+}
