@@ -61,7 +61,7 @@ fun UserHomeUiStateSuccess(
     val attendanceUiState by hvm.attendanceHomeUiState.collectAsStateWithLifecycle()
     val articleHomeUiState by hvm.articleHomeUiState.collectAsStateWithLifecycle()
     val foodHomeUiState by hvm.foodHomeUiState.collectAsStateWithLifecycle()
-    val alreadyAbsent by hvm.alreadyAbsent.collectAsStateWithLifecycle()
+    val alreadyAbsent by hvm.alreadyAttendMessage.collectAsStateWithLifecycle()
     val attendanceColor by hvm.attendanceColor.collectAsStateWithLifecycle()
 
     val sheetState = rememberModalBottomSheetState(

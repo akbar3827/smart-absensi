@@ -84,7 +84,7 @@ fun TopBar(
             )
         }
         Icon(
-            painter = painterResource(id = R.drawable.ic_bell),
+            painter = painterResource(id = R.drawable.ic_notification),
             contentDescription = "bell",
             tint = Indigo,
             modifier = Modifier.padding(2.dp).aspectRatio(1f, matchHeightConstraintsFirst = true)

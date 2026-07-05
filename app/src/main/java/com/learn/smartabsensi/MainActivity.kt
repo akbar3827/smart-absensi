@@ -22,6 +22,7 @@ import com.learn.smartabsensi.core.themes.SmartAbsensiTheme
 import com.learn.smartabsensi.core.utils.BottomBarDestination
 import com.learn.smartabsensi.features.presentation.components.BottomNav
 import com.learn.smartabsensi.features.presentation.view_models.CanteenViewModel
+import com.learn.smartabsensi.features.presentation.view_models.ChangeProfileViewModel
 import com.learn.smartabsensi.features.presentation.view_models.HistoryViewModel
 import com.learn.smartabsensi.features.presentation.view_models.HomeViewModel
 import com.learn.smartabsensi.features.presentation.view_models.LoginViewModel
@@ -76,8 +77,8 @@ class MainActivity : ComponentActivity() {
             SmartAbsensiTheme {
                 Scaffold(
                     bottomBar = {
-                        BottomBarDestination.entries.forEach {
-                            if (it.destination.route == isCurrentDestination) {
+                        BottomBarDestination.entries.forEach {destination ->
+                            if (destination.destination.route == isCurrentDestination) {
                                 BottomNav(
                                     navController = navController
                                 )
@@ -98,6 +99,7 @@ class MainActivity : ComponentActivity() {
                             dependency(hiltViewModel<ProfileViewModel>())
                             dependency(hiltViewModel<LoginViewModel>())
                             dependency(hiltViewModel<RegistViewModel>())
+                            dependency(hiltViewModel<ChangeProfileViewModel>())
                         }
                     )
                 }

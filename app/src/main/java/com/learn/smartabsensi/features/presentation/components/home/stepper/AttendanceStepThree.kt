@@ -38,6 +38,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.learn.smartabsensi.R
 import com.learn.smartabsensi.core.themes.Background
 import com.learn.smartabsensi.core.themes.TextPrimary
@@ -68,6 +69,7 @@ fun AttendanceStepThree(
     failedAttendance: MutableState<Boolean>,
     onShowBottomSheetChanged: (Boolean) -> Unit
 ) {
+    val alreadyAttendMessage by hvm.alreadyAttendMessage.collectAsStateWithLifecycle()
    var times by remember { mutableStateOf("") }
     LaunchedEffect(Unit) {
         while (isActive) {
@@ -324,7 +326,9 @@ fun AttendanceStepThree(
                             status = status,
                             classRoom = user.classRoom
                         )
-                        failedAttendance.value = true
+                        if (alreadyAttendMessage.isNotEmpty()) {
+                            failedAttendance.value = true
+                        }
                         scope.launch { sheetState.hide() }.invokeOnCompletion {
                             onShowBottomSheetChanged(false)
                         }
