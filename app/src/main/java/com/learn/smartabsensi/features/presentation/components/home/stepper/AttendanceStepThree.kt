@@ -66,10 +66,8 @@ fun AttendanceStepThree(
     status: String,
     scope: CoroutineScope,
     sheetState: SheetState,
-    failedAttendance: MutableState<Boolean>,
     onShowBottomSheetChanged: (Boolean) -> Unit
 ) {
-    val alreadyAttendMessage by hvm.alreadyAttendMessage.collectAsStateWithLifecycle()
    var times by remember { mutableStateOf("") }
     LaunchedEffect(Unit) {
         while (isActive) {
@@ -326,9 +324,6 @@ fun AttendanceStepThree(
                             status = status,
                             classRoom = user.classRoom
                         )
-                        if (alreadyAttendMessage.isNotEmpty()) {
-                            failedAttendance.value = true
-                        }
                         scope.launch { sheetState.hide() }.invokeOnCompletion {
                             onShowBottomSheetChanged(false)
                         }

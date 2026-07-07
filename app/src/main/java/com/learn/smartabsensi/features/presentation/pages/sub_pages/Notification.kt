@@ -1,4 +1,4 @@
-package com.learn.smartabsensi.features.presentation.pages
+package com.learn.smartabsensi.features.presentation.pages.sub_pages
 
 import androidx.compose.runtime.Composable
 import com.ramcosta.composedestinations.annotation.Destination

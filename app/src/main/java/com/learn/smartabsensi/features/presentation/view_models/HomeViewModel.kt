@@ -78,9 +78,12 @@ class HomeViewModel @Inject constructor(
         MutableStateFlow<NewsHomeUiState>(NewsHomeUiState.IsLoading)
     val newsHomeUiState = _newsHomeUiState.asStateFlow()
 
-    private var _alreadyAttendMessage =
+    private var _alreadyAttendaceMessage =
         MutableStateFlow("")
-    val alreadyAttendMessage = _alreadyAttendMessage.asStateFlow()
+    val alreadyAttendanceMessage = _alreadyAttendaceMessage.asStateFlow()
+    fun onAlreadyAttendMessage(string: String) {
+        _alreadyAttendaceMessage.value = string
+    }
 
     private var _attendanceCode =
         MutableStateFlow("")
@@ -212,7 +215,7 @@ class HomeViewModel @Inject constructor(
                     date = date,
                     createdAt = createdAt
                 ) {
-                    _alreadyAttendMessage.value = it
+                    _alreadyAttendaceMessage.value = it
                 }
             }
         }

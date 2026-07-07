@@ -34,7 +34,7 @@ import com.learn.smartabsensi.core.themes.TextPrimary
 import com.learn.smartabsensi.features.data.models.UserModel
 
 @Composable
-fun TopBar(
+fun TopBarHome(
     modifier: Modifier = Modifier,
     userData: UserModel
 ) {

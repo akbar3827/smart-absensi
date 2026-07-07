@@ -58,7 +58,6 @@ fun BottomSheetAttendance(
     currentTime: String,
     sheetState: SheetState,
     attendanceColor: Color,
-    failedAttendance: MutableState<Boolean>,
     onBottomSheetChanged: (Boolean) -> Unit
 ) {
     val kindOfAttendance by hvm.kindOfAttendance.collectAsStateWithLifecycle()
@@ -266,7 +265,6 @@ fun BottomSheetAttendance(
                     color = attendanceColor,
                     step = step,
                     sheetState = sheetState,
-                    failedAttendance = failedAttendance,
                     kindOfAttendance = kindOfAttendance,
                     attendanceMethod = attendanceMethod
                 ) {

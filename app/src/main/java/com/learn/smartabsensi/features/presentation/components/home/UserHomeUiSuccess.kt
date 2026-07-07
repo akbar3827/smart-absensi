@@ -57,25 +57,21 @@ fun UserHomeUiStateSuccess(
     hvm: HomeViewModel,
     userData: UserModel
 ) {
+    val scope = rememberCoroutineScope()
     val newsHomeUiState by hvm.newsHomeUiState.collectAsStateWithLifecycle()
     val attendanceUiState by hvm.attendanceHomeUiState.collectAsStateWithLifecycle()
     val articleHomeUiState by hvm.articleHomeUiState.collectAsStateWithLifecycle()
     val foodHomeUiState by hvm.foodHomeUiState.collectAsStateWithLifecycle()
-    val alreadyAbsent by hvm.alreadyAttendMessage.collectAsStateWithLifecycle()
+    val alreadyAbsent by hvm.alreadyAttendanceMessage.collectAsStateWithLifecycle()
     val attendanceColor by hvm.attendanceColor.collectAsStateWithLifecycle()
 
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true
     )
-    var showBottomSheet by remember { mutableStateOf(false) }
-
-    var currentTime by remember { mutableStateOf("") }
-
-    val scope = rememberCoroutineScope()
 
     val snackbarHostState = remember { SnackbarHostState() }
-
-    val showAlreadyAbsent= remember { mutableStateOf(false) }
+    var showBottomSheet by remember { mutableStateOf(false) }
+    var currentTime by remember { mutableStateOf("") }
 
     LaunchedEffect(Unit) {
         while (isActive) {
@@ -87,6 +83,7 @@ fun UserHomeUiStateSuccess(
             delay(1000)
         }
     }
+
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -94,7 +91,7 @@ fun UserHomeUiStateSuccess(
             modifier = Modifier
                 .fillMaxSize(),
             topBar = {
-                TopBar(userData = userData)
+                TopBarHome(userData = userData)
             }
         ) { padding ->
             LazyColumn(
@@ -145,18 +142,19 @@ fun UserHomeUiStateSuccess(
                             user = userData,
                             sheetState = sheetState,
                             currentTime = currentTime,
-                            failedAttendance = showAlreadyAbsent,
                             attendanceColor = attendanceColor
                         ) {
                             showBottomSheet = it
-                            if (showAlreadyAbsent.value) {
+                            if (alreadyAbsent.isNotEmpty()) {
                                 scope.launch {
                                     snackbarHostState.showSnackbar(alreadyAbsent)
+
+                                    hvm.onAlreadyAttendMessage("")
                                 }
-                                showAlreadyAbsent.value = false
                             }
                         }
                     }
+
                     Spacer(Modifier.height(8.dp))
                     when (val state = attendanceUiState) {
                         is AttendanceHomeUiState.IsLoading -> {
@@ -171,6 +169,7 @@ fun UserHomeUiStateSuccess(
                             AttendanceCard(state.data)
                         }
                     }
+
                     Spacer(Modifier.height(20.dp))
                     Row(
                         horizontalArrangement = Arrangement.SpaceBetween,
@@ -198,15 +197,11 @@ fun UserHomeUiStateSuccess(
                     ) {
                         when (val state = newsHomeUiState) {
                             is NewsHomeUiState.IsLoading -> {
-                                item {
-                                    CircularProgressIndicator()
-                                }
+                                item { CircularProgressIndicator() }
                             }
 
                             is NewsHomeUiState.Error -> {
-                                item {
-                                    Text(text = state.message)
-                                }
+                                item { Text(text = state.message) }
                             }
 
                             is NewsHomeUiState.Success -> {
@@ -230,13 +225,11 @@ fun UserHomeUiStateSuccess(
                                     CircularProgressIndicator()
                                 }
                             }
-
                             is ArticleHomeUiState.Error -> {
                                 item {
                                     Text(text = state.message)
                                 }
                             }
-
                             is ArticleHomeUiState.Success -> {
                                 state.data.articles?.forEachIndexed { index, news ->
                                     if (news != null && index < 15) {
@@ -288,7 +281,6 @@ fun UserHomeUiStateSuccess(
                                     CircularProgressIndicator()
                                 }
                             }
-
                             is FoodHomeUiState.Error -> {
                                 item {
                                     Text(
@@ -296,7 +288,6 @@ fun UserHomeUiStateSuccess(
                                     )
                                 }
                             }
-
                             is FoodHomeUiState.Success -> {
                                 state.data.forEach { food ->
                                     item {
