@@ -22,6 +22,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Date
@@ -43,6 +44,7 @@ class HomeViewModel @Inject constructor(
     fun getCurrentTime(): ZonedDateTime {
         return ZonedDateTime.now()
     }
+
     private val period = SimpleDateFormat(
         "yyyy-MM",
         Locale.getDefault()
@@ -78,9 +80,12 @@ class HomeViewModel @Inject constructor(
         MutableStateFlow<NewsHomeUiState>(NewsHomeUiState.IsLoading)
     val newsHomeUiState = _newsHomeUiState.asStateFlow()
 
-    private var _errorMessageAttendance =
+    private var _alreadyAttendaceMessage =
         MutableStateFlow("")
-    val alreadyAbsent = _errorMessageAttendance.asStateFlow()
+    val alreadyAttendanceMessage = _alreadyAttendaceMessage.asStateFlow()
+    fun onAlreadyAttendMessage(string: String) {
+        _alreadyAttendaceMessage.value = string
+    }
 
     private var _attendanceCode =
         MutableStateFlow("")
@@ -101,6 +106,7 @@ class HomeViewModel @Inject constructor(
     fun onKindOfAttendanceChanged(string: String) {
         _kindOfAttendance.value = string
     }
+
     private var _attendanceMethod =
         MutableStateFlow("")
     val attendanceMethod = _attendanceMethod.asStateFlow()
@@ -123,9 +129,6 @@ class HomeViewModel @Inject constructor(
         loadFood()
     }
 
-    fun reload() {
-        authRepository.reload()
-    }
 
     fun loadUser() {
         viewModelScope.launch {
@@ -141,9 +144,10 @@ class HomeViewModel @Inject constructor(
     }
 
     fun loadArticles() {
-        val q = "apple"
-        val from = "2026-06-14"
-        val to = getCurrentTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+        val q = "school"
+        val now = getCurrentTime()
+        val from = now.minusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+        val to = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
         val sortBy = "popularity"
         val apiKey = "eb0c87479cef41298b0f5948e67f88b9"
 
@@ -175,9 +179,9 @@ class HomeViewModel @Inject constructor(
     fun loadNews() {
         viewModelScope.launch {
             val result = newsRepository.getNews()
-            result.onSuccess {newsModels ->
+            result.onSuccess { newsModels ->
                 _newsHomeUiState.update { NewsHomeUiState.Success(newsModels) }
-            }.onFailure {throwable ->
+            }.onFailure { throwable ->
                 _newsHomeUiState.update { NewsHomeUiState.Error(message = throwable.message ?: "") }
             }
         }
@@ -186,16 +190,21 @@ class HomeViewModel @Inject constructor(
     fun loadAttendance() {
         viewModelScope.launch {
             if (uid != null) {
-                val result = attendanceRepository.getAttendance(uid, period)
+                val result = attendanceRepository.getAttendances(uid, period)
 
-                result.onSuccess {attendanceModel ->
+                result.onSuccess { attendanceModel ->
                     _attendanceHomeUiState.update { AttendanceHomeUiState.Success(data = attendanceModel) }
                 }.onFailure { throwable ->
-                    _attendanceHomeUiState.update { AttendanceHomeUiState.Error(message = throwable.message ?: "") }
+                    _attendanceHomeUiState.update {
+                        AttendanceHomeUiState.Error(
+                            message = throwable.message ?: ""
+                        )
+                    }
                 }
             }
         }
     }
+
     fun setAttendance(
         name: String,
         status: String,
@@ -212,7 +221,7 @@ class HomeViewModel @Inject constructor(
                     date = date,
                     createdAt = createdAt
                 ) {
-                    _errorMessageAttendance.value = it
+                    _alreadyAttendaceMessage.value = it
                 }
             }
         }
@@ -224,13 +233,12 @@ class HomeViewModel @Inject constructor(
             result.onSuccess { foodModels ->
                 _foodHomeUiState.update { FoodHomeUiState.Success(data = foodModels) }
             }
-            result.onFailure {throwable ->
+            result.onFailure { throwable ->
                 _foodHomeUiState.update { FoodHomeUiState.Error(message = throwable.message ?: "") }
             }
         }
     }
 }
-
 
 
 sealed interface FoodHomeUiState {

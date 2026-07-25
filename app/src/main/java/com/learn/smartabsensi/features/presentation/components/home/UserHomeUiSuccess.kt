@@ -1,6 +1,7 @@
 package com.learn.smartabsensi.features.presentation.components.home
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -40,7 +41,9 @@ import com.learn.smartabsensi.core.themes.DarkIndigo
 import com.learn.smartabsensi.core.themes.Indigo
 import com.learn.smartabsensi.core.themes.TextPrimary
 import com.learn.smartabsensi.core.themes.TextSecondary
+import com.learn.smartabsensi.features.data.models.ArticlesItem
 import com.learn.smartabsensi.features.data.models.UserModel
+import com.learn.smartabsensi.features.presentation.components.TopBar
 import com.learn.smartabsensi.features.presentation.view_models.ArticleHomeUiState
 import com.learn.smartabsensi.features.presentation.view_models.AttendanceHomeUiState
 import com.learn.smartabsensi.features.presentation.view_models.FoodHomeUiState
@@ -53,29 +56,27 @@ import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UserHomeUiStateSuccess(
+fun UserHomeUiSuccess(
     hvm: HomeViewModel,
-    userData: UserModel
+    userData: UserModel,
+    onNewsPageClick: (ArticlesItem) -> Unit,
+    onNotificationPageClick: (UserModel) -> Unit
 ) {
+    val scope = rememberCoroutineScope()
     val newsHomeUiState by hvm.newsHomeUiState.collectAsStateWithLifecycle()
     val attendanceUiState by hvm.attendanceHomeUiState.collectAsStateWithLifecycle()
     val articleHomeUiState by hvm.articleHomeUiState.collectAsStateWithLifecycle()
     val foodHomeUiState by hvm.foodHomeUiState.collectAsStateWithLifecycle()
-    val alreadyAbsent by hvm.alreadyAbsent.collectAsStateWithLifecycle()
+    val alreadyAbsent by hvm.alreadyAttendanceMessage.collectAsStateWithLifecycle()
     val attendanceColor by hvm.attendanceColor.collectAsStateWithLifecycle()
 
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true
     )
-    var showBottomSheet by remember { mutableStateOf(false) }
-
-    var currentTime by remember { mutableStateOf("") }
-
-    val scope = rememberCoroutineScope()
 
     val snackbarHostState = remember { SnackbarHostState() }
-
-    val showAlreadyAbsent= remember { mutableStateOf(false) }
+    var showBottomSheet by remember { mutableStateOf(false) }
+    var currentTime by remember { mutableStateOf("") }
 
     LaunchedEffect(Unit) {
         while (isActive) {
@@ -87,6 +88,7 @@ fun UserHomeUiStateSuccess(
             delay(1000)
         }
     }
+
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -94,18 +96,21 @@ fun UserHomeUiStateSuccess(
             modifier = Modifier
                 .fillMaxSize(),
             topBar = {
-                TopBar(userData = userData)
+                TopBar(
+                    user = userData,
+                    onNotificationPageClick = onNotificationPageClick
+                )
             }
-        ) { padding ->
+        ) { paddingValues ->
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Background)
+                    .padding(paddingValues)
                     .padding(horizontal = 16.dp)
-                    .padding(padding)
             ) {
                 item {
-                    Spacer(Modifier.height(50.dp))
+                    Spacer(Modifier.height(40.dp))
                     Text(
                         text = "Selamat pagi",
                         color = TextPrimary
@@ -145,18 +150,19 @@ fun UserHomeUiStateSuccess(
                             user = userData,
                             sheetState = sheetState,
                             currentTime = currentTime,
-                            failedAttendance = showAlreadyAbsent,
                             attendanceColor = attendanceColor
                         ) {
                             showBottomSheet = it
-                            if (showAlreadyAbsent.value) {
+                            if (alreadyAbsent.isNotEmpty()) {
                                 scope.launch {
                                     snackbarHostState.showSnackbar(alreadyAbsent)
+
+                                    hvm.onAlreadyAttendMessage("")
                                 }
-                                showAlreadyAbsent.value = false
                             }
                         }
                     }
+
                     Spacer(Modifier.height(8.dp))
                     when (val state = attendanceUiState) {
                         is AttendanceHomeUiState.IsLoading -> {
@@ -171,6 +177,7 @@ fun UserHomeUiStateSuccess(
                             AttendanceCard(state.data)
                         }
                     }
+
                     Spacer(Modifier.height(20.dp))
                     Row(
                         horizontalArrangement = Arrangement.SpaceBetween,
@@ -198,15 +205,11 @@ fun UserHomeUiStateSuccess(
                     ) {
                         when (val state = newsHomeUiState) {
                             is NewsHomeUiState.IsLoading -> {
-                                item {
-                                    CircularProgressIndicator()
-                                }
+                                item { CircularProgressIndicator() }
                             }
 
                             is NewsHomeUiState.Error -> {
-                                item {
-                                    Text(text = state.message)
-                                }
+                                item { Text(text = state.message) }
                             }
 
                             is NewsHomeUiState.Success -> {
@@ -242,6 +245,9 @@ fun UserHomeUiStateSuccess(
                                     if (news != null && index < 15) {
                                         item {
                                             NewsCard(
+                                                modifier = Modifier.clickable {
+                                                    onNewsPageClick(news)
+                                                },
                                                 id = news.author ?: "",
                                                 title = news.title ?: "",
                                                 description = news.description ?: "",

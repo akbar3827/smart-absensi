@@ -1,6 +1,9 @@
 package com.learn.smartabsensi.features.data.models
 
+import kotlinx.serialization.Serializable
 
+
+@Serializable
 data class UserModel(
     val uid: String = "",
     val name: String = "",

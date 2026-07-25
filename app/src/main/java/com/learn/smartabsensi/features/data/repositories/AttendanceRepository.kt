@@ -17,7 +17,7 @@ class AttendanceRepository @Inject constructor(
         val COLLECTION_NAME = "attendance"
     }
 
-    suspend fun getAttendance(uid: String, period: String): Result<List<AttendanceModel>> {
+    suspend fun getAttendances(uid: String, period: String): Result<List<AttendanceModel>> {
         return try {
             val snapshot = db
                 .collection(COLLECTION_NAME)
@@ -66,18 +66,19 @@ class AttendanceRepository @Inject constructor(
 
                 if (snapshot.exists()) {
                     throwable("Kamu sudah melakukan absensi")
-                }
-                transaction.set(
-                    attendanceRef, AttendanceModel(
-                        uid,
-                        name,
-                        status,
-                        classRoom,
-                        period,
-                        date,
-                        createdAt
+                } else {
+                    transaction.set(
+                        attendanceRef, AttendanceModel(
+                            uid,
+                            name,
+                            status,
+                            classRoom,
+                            period,
+                            date,
+                            createdAt
+                        )
                     )
-                )
+                }
             }.await()
         } else {
             throwable("Hanya bisa melakukan absensi dari pukul 5.00 - 7.00")

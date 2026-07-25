@@ -20,21 +20,19 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import com.learn.smartabsensi.core.themes.IndigoSoft
 import com.learn.smartabsensi.core.themes.TextPrimary
 import com.learn.smartabsensi.core.themes.TextSecondary
 import com.learn.smartabsensi.features.presentation.components.LoginForm
 import com.learn.smartabsensi.features.presentation.view_models.LoginViewModel
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.annotation.RootGraph
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
-@Destination<RootGraph>
 @Composable
 fun LoginPage(
-    navigator: DestinationsNavigator,
-    lvm: LoginViewModel
+    onRegistPageClick: () -> Unit,
+    onHomePageClick: () -> Unit,
+    lvm: LoginViewModel = viewModel()
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         AsyncImage(
@@ -43,28 +41,19 @@ fun LoginPage(
             modifier = Modifier.matchParentSize(),
             contentScale = ContentScale.Crop
         )
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp)
-                .align(Alignment.Center)
-                .offset(y = -100.dp)
-                .clip(
-                    RoundedCornerShape(
-                        topStartPercent = 100,
-                        topEndPercent = 100
-                    )
-                )
-                .background(IndigoSoft)
-        )
         Column(
             Modifier
+                .align(Alignment.BottomCenter)
                 .fillMaxWidth()
-                .padding(top = 415.dp)
-                .fillMaxHeight(1f)
-                .background(IndigoSoft)
+                .background(
+                    color = IndigoSoft,
+                    shape = RoundedCornerShape(
+                        topStartPercent = 14,
+                        topEndPercent = 14
+                    )
+                )
                 .padding(horizontal = 26.dp)
-                .padding(top = 30.dp),
+                .padding(top = 50.dp, bottom = 20.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
@@ -81,7 +70,8 @@ fun LoginPage(
             )
             Spacer(Modifier.height(20.dp))
             LoginForm(
-                navigator = navigator,
+                onHomePageClick = onHomePageClick,
+                onRegistPageClick = onRegistPageClick,
                 lvm = lvm
             )
         }

@@ -43,6 +43,9 @@ import com.learn.smartabsensi.core.themes.Background
 import com.learn.smartabsensi.core.themes.TextPrimary
 import com.learn.smartabsensi.core.themes.TextSecondary
 import com.learn.smartabsensi.features.data.models.UserModel
+import com.learn.smartabsensi.features.presentation.components.home.KindOfProof
+import com.learn.smartabsensi.features.presentation.components.home.Proof
+import com.learn.smartabsensi.features.presentation.components.home.SummaryAttendance
 import com.learn.smartabsensi.features.presentation.view_models.HomeViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
@@ -65,20 +68,9 @@ fun AttendanceStepThree(
     status: String,
     scope: CoroutineScope,
     sheetState: SheetState,
-    failedAttendance: MutableState<Boolean>,
     onShowBottomSheetChanged: (Boolean) -> Unit
 ) {
-   var times by remember { mutableStateOf("") }
-    LaunchedEffect(Unit) {
-        while (isActive) {
-            times = SimpleDateFormat(
-                "HH.mm",
-                Locale.getDefault()
-            ).format(Date())
 
-            delay(1000)
-        }
-    }
     LazyColumn(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -108,185 +100,21 @@ fun AttendanceStepThree(
             }
 
             Spacer(Modifier.height(16.dp))
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(250.dp)
-                    .clip(RoundedCornerShape(18.dp))
-                    .background(color = color.copy(alpha = 0.1f), shape = RoundedCornerShape(18.dp)),
-                contentAlignment = Alignment.Center
-            ) {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.camera),
-                        contentDescription = null,
-                        modifier = Modifier.size(40.dp)
-                    )
-                    Text(
-                        text = "Tambahkan foto selfie sebagai bukti",
-                        color = color,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = "JGP, PNG, PDF ── Maks.5MB",
-                        color = TextSecondary,
-                    )
-                }
-            }
-
+            Proof(color = color)
+            Spacer(Modifier.height(16.dp))
+            KindOfProof()
+            Spacer(Modifier.height(20.dp))
+            SummaryAttendance(
+                color = color,
+                kindOfAttendance = kindOfAttendance,
+                attendanceMethod = attendanceMethod
+            )
             Spacer(Modifier.height(16.dp))
 
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Row(
-                    modifier = Modifier
-                        .weight(1f)
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(color = Background, shape = RoundedCornerShape(12.dp))
-                        .padding(horizontal = 16.dp, vertical = 10.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.camera),
-                        contentDescription = null,
-                        modifier = Modifier.size(20.dp)
-                    )
-                    Spacer(Modifier.width(8.dp))
-                    Text(
-                        text = "Kamera",
-                        color = TextSecondary,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-                Row(
-                    modifier = Modifier
-                        .weight(1f)
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(color = Background, shape = RoundedCornerShape(12.dp))
-                        .padding(horizontal = 16.dp, vertical = 10.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.gallery),
-                        contentDescription = null,
-                        modifier = Modifier.size(20.dp)
-                    )
-                    Spacer(Modifier.width(8.dp))
-                    Text(
-                        text = "Galery",
-                        color = TextSecondary,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-                Row(
-                    modifier = Modifier
-                        .weight(1f)
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(color = Background, shape = RoundedCornerShape(12.dp))
-                        .padding(horizontal = 16.dp, vertical = 10.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.folder),
-                        contentDescription = null,
-                        modifier = Modifier.size(20.dp)
-                    )
-                    Spacer(Modifier.width(8.dp))
-                    Text(
-                        text = "File",
-                        color = TextSecondary,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-            }
-
-            Spacer(Modifier.height(20.dp))
-
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(color = color.copy(0.1f), shape = RoundedCornerShape(18.dp))
-                    .padding(16.dp)
-            ) {
-                Text(
-                    text = "RINGKASAN ABSENSI",
-                    color = color,
-                    fontWeight = FontWeight.Bold
-                )
-                Row(
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 6.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = "Jenis",
-                        color = TextSecondary,
-                        fontSize = 14.sp
-                    )
-                    Text(
-                        text = kindOfAttendance,
-                        fontWeight = FontWeight.Bold,
-                        color = color,
-                        fontSize = 14.sp
-                    )
-                }
-                Box(
-                    modifier = Modifier.height(0.3.dp).fillMaxWidth().background(color = color, shape = CircleShape)
-                )
-                Row(
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 6.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = "Metode",
-                        color = TextSecondary,
-                        fontSize = 14.sp
-                    )
-                    Text(
-                        text = attendanceMethod,
-                        fontWeight = FontWeight.Bold,
-                        color = color,
-                        fontSize = 14.sp
-                    )
-                }
-                Box(
-                    modifier = Modifier.height(0.3.dp).fillMaxWidth().background(color = color, shape = CircleShape)
-                )
-                Row(
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 6.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = "Waktu",
-                        color = TextSecondary,
-                        fontSize = 14.sp
-                    )
-                    Text(
-                        text = "$times WIB",
-                        fontWeight = FontWeight.Bold,
-                        color = color,
-                        fontSize = 14.sp
-                    )
-                }
-            }
-
-            Spacer(Modifier.height(16.dp))
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(12.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Button(
                     onClick = {
@@ -309,7 +137,7 @@ fun AttendanceStepThree(
                     Icon(
                         painter = painterResource(id = R.drawable.ic_arrow_left),
                         contentDescription = null,
-                        modifier = Modifier.size(30.dp)
+                        modifier = Modifier.size(26.dp)
                     )
                     Text(
                         text = "Kembali",
@@ -324,7 +152,6 @@ fun AttendanceStepThree(
                             status = status,
                             classRoom = user.classRoom
                         )
-                        failedAttendance.value = true
                         scope.launch { sheetState.hide() }.invokeOnCompletion {
                             onShowBottomSheetChanged(false)
                         }
@@ -355,7 +182,7 @@ fun AttendanceStepThree(
                         Icon(
                             painter = painterResource(id = R.drawable.ic_arrow_right),
                             contentDescription = null,
-                            modifier = Modifier.size(30.dp)
+                            modifier = Modifier.size(26.dp)
                         )
                     }
                 }

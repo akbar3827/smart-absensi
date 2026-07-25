@@ -1,7 +1,5 @@
 package com.learn.smartabsensi.features.presentation.components
 
-import com.ramcosta.composedestinations.generated.destinations.HomePageDestination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,7 +20,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,7 +30,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.google.firebase.auth.FirebaseAuth
 import com.learn.smartabsensi.R
 import com.learn.smartabsensi.core.themes.Err
 import com.learn.smartabsensi.core.themes.Indigo
@@ -41,17 +37,14 @@ import com.learn.smartabsensi.core.themes.TextPrimary
 import com.learn.smartabsensi.core.themes.TextSecondary
 import com.learn.smartabsensi.features.presentation.view_models.RegistUiState
 import com.learn.smartabsensi.features.presentation.view_models.RegistViewModel
-import com.ramcosta.composedestinations.generated.destinations.LoginPageDestination
-import kotlinx.coroutines.tasks.await
 
 @Composable
 fun RegistFormStepThree(
     modifier: Modifier = Modifier,
-    navigator: DestinationsNavigator,
     rvm: RegistViewModel,
-    step: MutableState<Int>
+    step: MutableState<Int>,
+    onLoginPageClick: () -> Unit
 ) {
-    val regexPola = Regex("^(?=.*[A-Z])(?=.*\\d).+$")
     val registUiState by rvm.registUiState.collectAsStateWithLifecycle()
 
     val password by rvm.password.collectAsStateWithLifecycle()
@@ -62,11 +55,9 @@ fun RegistFormStepThree(
     var errorPasswordConfirm by remember { mutableStateOf(false) }
     var errorMessagePasswordConfirm by remember { mutableStateOf("") }
 
-
-
     LaunchedEffect(registUiState) {
         if (registUiState is RegistUiState.Success) {
-            navigator.navigate(LoginPageDestination)
+            onLoginPageClick()
         }
     }
     val errMessage = if (registUiState is RegistUiState.Error) {
@@ -136,7 +127,7 @@ fun RegistFormStepThree(
                 },
                 modifier = Modifier
                     .weight(0.7f)
-                    .height(60.dp)
+                    .height(50.dp)
                     .shadow(
                         elevation = 10.dp,
                         clip = true,
@@ -161,12 +152,11 @@ fun RegistFormStepThree(
                     Icon(
                         painter = painterResource(id = R.drawable.ic_arrow_left),
                         contentDescription = null,
-                        modifier = Modifier.size(32.dp),
+                        modifier = Modifier.size(26.dp),
                         tint = Color.Gray
                     )
                     Text(
                         text = "Kembali",
-                        fontSize = 20.sp,
                         color = Color.Gray,
                         fontWeight = FontWeight.Bold
                     )
@@ -200,7 +190,7 @@ fun RegistFormStepThree(
                 },
                 modifier = Modifier
                     .weight(1f)
-                    .height(60.dp)
+                    .height(50.dp)
                     .shadow(
                         elevation = 10.dp,
                         clip = true,
@@ -226,14 +216,13 @@ fun RegistFormStepThree(
                         Text(
                             text = "Regist",
                             color = Color.White,
-                            fontSize = 20.sp,
                             fontWeight = FontWeight.Bold
                         )
                         Icon(
                             painter = painterResource(id = R.drawable.ic_arrow_right),
                             contentDescription = null,
                             tint = Color.White,
-                            modifier = Modifier.size(32.dp)
+                            modifier = Modifier.size(26.dp)
                         )
                     }
                 }

@@ -52,6 +52,7 @@ fun StatCard(
                 text = stat,
                 color = color,
                 fontSize = 24.sp,
+                fontWeight = FontWeight.ExtraBold,
                 modifier = Modifier.padding(vertical = 4.dp)
             )
         } else {
@@ -71,6 +72,7 @@ fun StatCard(
                 Text(
                     text = it,
                     color = color,
+                    fontWeight = FontWeight.ExtraBold,
                     fontSize = 24.sp,
                     modifier = Modifier.padding(vertical = 4.dp)
                 )

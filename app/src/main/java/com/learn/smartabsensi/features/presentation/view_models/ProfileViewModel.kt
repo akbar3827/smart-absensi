@@ -1,6 +1,5 @@
 package com.learn.smartabsensi.features.presentation.view_models
 
-import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
@@ -66,7 +65,7 @@ class ProfileViewModel @Inject constructor(
     fun loadAttendance() {
         viewModelScope.launch {
             if (uid != null) {
-                val result = attendanceRepository.getAttendance(uid, period)
+                val result = attendanceRepository.getAttendances(uid, period)
 
                 result.onSuccess { attendances ->
                     _attendanceProfileUiState.update { AttendanceProfileUiState.Success(data = attendances) }

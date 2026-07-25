@@ -38,15 +38,13 @@ import com.learn.smartabsensi.core.themes.TextPrimary
 import com.learn.smartabsensi.core.themes.TextSecondary
 import com.learn.smartabsensi.features.presentation.view_models.RegistUiState
 import com.learn.smartabsensi.features.presentation.view_models.RegistViewModel
-import com.ramcosta.composedestinations.generated.destinations.LoginPageDestination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Composable
 fun RegistFormStepOne(
     modifier: Modifier = Modifier,
-    navigator: DestinationsNavigator,
     rvm: RegistViewModel,
-    step: MutableState<Int>
+    step: MutableState<Int>,
+    onLoginPageClick: () -> Unit
 ) {
     val registUiState by rvm.registUiState.collectAsStateWithLifecycle()
 
@@ -175,7 +173,7 @@ fun RegistFormStepOne(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(60.dp)
+                .height(50.dp)
                 .shadow(
                     elevation = 10.dp,
                     clip = true,
@@ -195,14 +193,13 @@ fun RegistFormStepOne(
                 Text(
                     text = "Lanjutkan",
                     color = Color.White,
-                    fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
                 )
                 Icon(
                     painter = painterResource(id = R.drawable.ic_arrow_right),
                     contentDescription = null,
                     tint = Color.White,
-                    modifier = Modifier.size(32.dp)
+                    modifier = Modifier.size(26.dp)
                 )
             }
         }
@@ -228,7 +225,7 @@ fun RegistFormStepOne(
                     interactionSource = remember { MutableInteractionSource() },
                     indication = null
                 ) {
-                    navigator.navigate(LoginPageDestination)
+                    onLoginPageClick()
                 }
             )
         }
