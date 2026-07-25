@@ -41,7 +41,6 @@ fun AttendanceNoteInput(
     var isFocused by remember { mutableStateOf(false) }
     BasicTextField(
         value = attendanceNote,
-        singleLine = true,
         onValueChange = {
             hvm.onAttendanceNoteChanged(it)
         },

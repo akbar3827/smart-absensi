@@ -3,7 +3,10 @@ package com.learn.smartabsensi.features.data.models
 import kotlinx.parcelize.Parcelize
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.Contextual
+import kotlinx.serialization.Serializable
 
+@Serializable
 @Parcelize
 data class ArticleResponse(
 
@@ -17,6 +20,7 @@ data class ArticleResponse(
 	val status: String? = null
 ) : Parcelable
 
+@Serializable
 @Parcelize
 data class ArticlesItem(
 
@@ -33,7 +37,7 @@ data class ArticlesItem(
 	val description: String? = null,
 
 	@field:SerializedName("source")
-	val source: Source? = null,
+	@Contextual val source: Source? = null,
 
 	@field:SerializedName("title")
 	val title: String? = null,
@@ -45,6 +49,7 @@ data class ArticlesItem(
 	val content: String? = null
 ) : Parcelable
 
+@Serializable
 @Parcelize
 data class Source(
 

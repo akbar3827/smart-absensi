@@ -2,6 +2,7 @@ package com.learn.smartabsensi.features.presentation.components.profile
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,10 +33,15 @@ import com.learn.smartabsensi.core.themes.TextPrimary
 import com.learn.smartabsensi.core.themes.TextSecondary
 import com.learn.smartabsensi.core.themes.YellowDark
 import com.learn.smartabsensi.features.data.models.SettingUiType
+import com.learn.smartabsensi.features.data.models.UserModel
 
 @Composable
 fun AccountSetting(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    user: UserModel,
+    onEditProfilePageClick: (UserModel) -> Unit,
+    onNotificationPagePageClick: (UserModel) -> Unit,
+    onChangePasswordPagePageClick: (UserModel) -> Unit
 ) {
     val listAccountSet = listOf(
         SettingUiType(
@@ -43,18 +49,21 @@ fun AccountSetting(
             name = "Ubah Profil",
             color = Purple,
             description = "Nama, foto, dan info diri",
+            onScreenClick = onEditProfilePageClick
         ),
         SettingUiType(
             icon = R.drawable.ic_notification,
             name = "Notifikasi",
             color = YellowDark,
             description = "Atur preferensi notifikasi",
+            onScreenClick = onNotificationPagePageClick
         ),
         SettingUiType(
             icon = R.drawable.ic_passwordd,
-            name = "Ubah Profil",
+            name = "Ubah Password",
             color = Teal,
             description = "Terakhir diubah 30 hari lalu",
+            onScreenClick = onChangePasswordPagePageClick
         )
     )
 
@@ -79,7 +88,12 @@ fun AccountSetting(
     ) {
         listAccountSet.forEachIndexed { index, setting ->
             Row(
-                modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp)
+                    .clickable {
+                        setting.onScreenClick(user)
+                    },
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
@@ -91,9 +105,11 @@ fun AccountSetting(
                         modifier = Modifier
                             .size(40.dp)
                             .clip(RoundedCornerShape(12.dp))
-                            .background(color = setting.color.copy(alpha = 0.1f),
+                            .background(
+                                color = setting.color.copy(alpha = 0.1f),
                                 shape = RoundedCornerShape(12.dp)
-                            ).padding(8.dp)
+                            )
+                            .padding(8.dp)
                     )
                     Spacer(Modifier.width(12.dp))
                     Column {

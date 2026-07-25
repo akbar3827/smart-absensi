@@ -4,19 +4,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.selectable
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,16 +20,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation3.runtime.NavBackStack
+import androidx.navigation3.runtime.NavKey
 import com.learn.smartabsensi.core.themes.Indigo
-import com.learn.smartabsensi.core.utils.BottomBarDestination
-import com.learn.smartabsensi.core.themes.Primary
-import com.learn.smartabsensi.core.themes.TextPrimary
+import com.learn.smartabsensi.core.utils.BottomNavItem
 import com.ramcosta.composedestinations.utils.currentDestinationAsState
 import com.ramcosta.composedestinations.utils.isRouteOnBackStackAsState
 
 @Composable
-fun BottomNav(navController: NavController) {
-    val currentDestination = navController.currentDestinationAsState().value
+fun BottomNav(
+    backStack: NavBackStack<NavKey>,
+    modifier: Modifier = Modifier
+) {
+    val currentRoute = backStack.lastOrNull()
 
     Row(
         modifier = Modifier
@@ -43,11 +41,9 @@ fun BottomNav(navController: NavController) {
             .background(Color.Transparent),
         horizontalArrangement = Arrangement.Center
     ) {
-        BottomBarDestination.entries.forEach {
-            val isCurrentDestOnBackStack =
-                navController.isRouteOnBackStackAsState(it.destination).value
+        BottomNavItem.entries.forEach { item ->
 
-            val selected = currentDestination == it.destination
+            val selected = currentRoute == item.route
 
             Box(
                 modifier = Modifier
@@ -67,27 +63,17 @@ fun BottomNav(navController: NavController) {
                     .selectable(
                         selected = selected,
                         onClick = {
-                            if (isCurrentDestOnBackStack) {
-                                navController.popBackStack(
-                                    route = it.destination.route,
-                                    inclusive = false
-                                )
-                                return@selectable
-                            }
-                            navController.navigate(route = it.destination.route) {
-                                popUpTo(navController.graph.startDestinationId) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
+                            if (currentRoute != item.route) {
+                                backStack.clear()
+                                backStack.add(item.route)
                             }
                         }
                     ),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    painter = painterResource(id = it.icon),
-                    contentDescription = it.label,
+                    painter = painterResource(id = item.icon),
+                    contentDescription = item.label,
                     modifier = Modifier
                         .size(50.dp)
                         .padding(vertical = 8.dp, horizontal = 10.dp),

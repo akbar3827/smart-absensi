@@ -207,7 +207,7 @@ fun RegistFormStepTwo(
                 },
                 modifier = Modifier
                     .weight(0.7f)
-                    .height(60.dp)
+                    .height(50.dp)
                     .shadow(
                         elevation = 10.dp,
                         clip = true,
@@ -232,12 +232,11 @@ fun RegistFormStepTwo(
                     Icon(
                         painter = painterResource(id = R.drawable.ic_arrow_left),
                         contentDescription = null,
-                        modifier = Modifier.size(32.dp),
+                        modifier = Modifier.size(26.dp),
                         tint = Color.Gray
                     )
                     Text(
                         text = "Kembali",
-                        fontSize = 20.sp,
                         color = Color.Gray,
                         fontWeight = FontWeight.Bold
                     )
@@ -267,7 +266,7 @@ fun RegistFormStepTwo(
                 },
                 modifier = Modifier
                     .weight(1f)
-                    .height(60.dp)
+                    .height(50.dp)
                     .shadow(
                         elevation = 10.dp,
                         clip = true,
@@ -287,14 +286,13 @@ fun RegistFormStepTwo(
                     Text(
                         text = "Lanjutkan",
                         color = Color.White,
-                        fontSize = 20.sp,
                         fontWeight = FontWeight.Bold
                     )
                     Icon(
                         painter = painterResource(id = R.drawable.ic_arrow_right),
                         contentDescription = null,
                         tint = Color.White,
-                        modifier = Modifier.size(32.dp)
+                        modifier = Modifier.size(26.dp)
                     )
                 }
             }

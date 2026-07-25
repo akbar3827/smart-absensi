@@ -44,7 +44,7 @@ fun TopBarProfile(
             contentDescription = "bell",
             tint = Color.White,
             modifier = Modifier
-                .size(50.dp)
+                .size(40.dp)
                 .align(Alignment.CenterEnd)
                 .offset(x = -30.dp, y = -30.dp)
                 .clip(RoundedCornerShape(16.dp))
@@ -54,7 +54,7 @@ fun TopBarProfile(
                     shape = RoundedCornerShape(16.dp)
                 )
                 .background(color = Color.White.copy(alpha = 0.1f))
-                .padding(12.dp)
+                .padding(10.dp)
         )
         Box(
             modifier = Modifier

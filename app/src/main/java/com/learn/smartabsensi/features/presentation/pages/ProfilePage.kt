@@ -3,20 +3,21 @@ package com.learn.smartabsensi.features.presentation.pages
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.learn.smartabsensi.features.data.models.UserModel
 import com.learn.smartabsensi.features.presentation.components.ErrorResponse
 import com.learn.smartabsensi.features.presentation.components.LoadingResponse
 import com.learn.smartabsensi.features.presentation.components.profile.UserProfileUiSuccess
 import com.learn.smartabsensi.features.presentation.view_models.ProfileViewModel
 import com.learn.smartabsensi.features.presentation.view_models.UserProfileUiState
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.annotation.RootGraph
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
-@Destination<RootGraph>
 @Composable
 fun ProfilePage(
-    navigator: DestinationsNavigator,
-    pvm: ProfileViewModel
+    pvm: ProfileViewModel = viewModel(),
+    onEditProfilePageClick: (UserModel) -> Unit,
+    onLoginPageClick: () -> Unit,
+    onNotificationPagePageClick: (UserModel) -> Unit,
+    onChangePasswordPagePageClick: (UserModel) -> Unit
 ) {
     val userProfileUIState by pvm.userProfileUiState.collectAsStateWithLifecycle()
 
@@ -29,9 +30,12 @@ fun ProfilePage(
         }
         is UserProfileUiState.Success -> {
             UserProfileUiSuccess(
-                navigator = navigator,
                 pvm = pvm,
-                user = state.data
+                user = state.data,
+                onLoginPageClick = onLoginPageClick,
+                onEditProfilePageClick = onEditProfilePageClick,
+                onNotificationPagePageClick = onNotificationPagePageClick,
+                onChangePasswordPagePageClick = onChangePasswordPagePageClick
             )
         }
     }

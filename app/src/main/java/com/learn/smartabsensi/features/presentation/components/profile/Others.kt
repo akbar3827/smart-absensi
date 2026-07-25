@@ -34,7 +34,8 @@ import com.learn.smartabsensi.features.data.models.SettingUiType
 
 @Composable
 fun Others(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    emptyScreen: (String) -> Unit
 ) {
     val listOthers = listOf(
         SettingUiType(
@@ -42,12 +43,14 @@ fun Others(
             name = "Bantuan",
             color = Pink,
             description = "FAQ dan panduan penggunaan",
+            onScreenClick = emptyScreen
         ),
         SettingUiType(
             icon = R.drawable.ic_star,
             name = "Beri Ulasan",
             color = Amber,
             description = "Bantu kami berkembang",
+            onScreenClick = emptyScreen
         )
     )
 

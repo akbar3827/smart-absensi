@@ -28,13 +28,11 @@ import androidx.compose.ui.unit.sp
 import com.learn.smartabsensi.core.themes.Indigo
 import com.learn.smartabsensi.core.themes.TextPrimary
 import com.learn.smartabsensi.features.presentation.view_models.ProfileViewModel
-import com.ramcosta.composedestinations.generated.destinations.LoginPageDestination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Composable
 fun FloatLogoutBox(
     modifier: Modifier = Modifier,
-    navigator: DestinationsNavigator,
+    onLoginPageClick: () -> Unit,
     pvm: ProfileViewModel,
     onShowBoxChanged: (Boolean) -> Unit
 ) {
@@ -96,9 +94,7 @@ fun FloatLogoutBox(
                 Button(
                     onClick = {
                         pvm.logout()
-                        navigator.navigate(
-                            LoginPageDestination
-                        )
+                        onLoginPageClick()
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Indigo

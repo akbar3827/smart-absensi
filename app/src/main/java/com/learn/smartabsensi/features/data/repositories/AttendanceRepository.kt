@@ -17,7 +17,7 @@ class AttendanceRepository @Inject constructor(
         val COLLECTION_NAME = "attendance"
     }
 
-    suspend fun getAttendance(uid: String, period: String): Result<List<AttendanceModel>> {
+    suspend fun getAttendances(uid: String, period: String): Result<List<AttendanceModel>> {
         return try {
             val snapshot = db
                 .collection(COLLECTION_NAME)

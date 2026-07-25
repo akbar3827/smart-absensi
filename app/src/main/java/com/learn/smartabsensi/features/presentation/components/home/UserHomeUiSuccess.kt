@@ -1,6 +1,7 @@
 package com.learn.smartabsensi.features.presentation.components.home
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -40,7 +41,9 @@ import com.learn.smartabsensi.core.themes.DarkIndigo
 import com.learn.smartabsensi.core.themes.Indigo
 import com.learn.smartabsensi.core.themes.TextPrimary
 import com.learn.smartabsensi.core.themes.TextSecondary
+import com.learn.smartabsensi.features.data.models.ArticlesItem
 import com.learn.smartabsensi.features.data.models.UserModel
+import com.learn.smartabsensi.features.presentation.components.TopBar
 import com.learn.smartabsensi.features.presentation.view_models.ArticleHomeUiState
 import com.learn.smartabsensi.features.presentation.view_models.AttendanceHomeUiState
 import com.learn.smartabsensi.features.presentation.view_models.FoodHomeUiState
@@ -53,9 +56,11 @@ import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UserHomeUiStateSuccess(
+fun UserHomeUiSuccess(
     hvm: HomeViewModel,
-    userData: UserModel
+    userData: UserModel,
+    onNewsPageClick: (ArticlesItem) -> Unit,
+    onNotificationPageClick: (UserModel) -> Unit
 ) {
     val scope = rememberCoroutineScope()
     val newsHomeUiState by hvm.newsHomeUiState.collectAsStateWithLifecycle()
@@ -91,18 +96,21 @@ fun UserHomeUiStateSuccess(
             modifier = Modifier
                 .fillMaxSize(),
             topBar = {
-                TopBarHome(userData = userData)
+                TopBar(
+                    user = userData,
+                    onNotificationPageClick = onNotificationPageClick
+                )
             }
-        ) { padding ->
+        ) { paddingValues ->
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Background)
+                    .padding(paddingValues)
                     .padding(horizontal = 16.dp)
-                    .padding(padding)
             ) {
                 item {
-                    Spacer(Modifier.height(50.dp))
+                    Spacer(Modifier.height(40.dp))
                     Text(
                         text = "Selamat pagi",
                         color = TextPrimary
@@ -225,16 +233,21 @@ fun UserHomeUiStateSuccess(
                                     CircularProgressIndicator()
                                 }
                             }
+
                             is ArticleHomeUiState.Error -> {
                                 item {
                                     Text(text = state.message)
                                 }
                             }
+
                             is ArticleHomeUiState.Success -> {
                                 state.data.articles?.forEachIndexed { index, news ->
                                     if (news != null && index < 15) {
                                         item {
                                             NewsCard(
+                                                modifier = Modifier.clickable {
+                                                    onNewsPageClick(news)
+                                                },
                                                 id = news.author ?: "",
                                                 title = news.title ?: "",
                                                 description = news.description ?: "",
@@ -281,6 +294,7 @@ fun UserHomeUiStateSuccess(
                                     CircularProgressIndicator()
                                 }
                             }
+
                             is FoodHomeUiState.Error -> {
                                 item {
                                     Text(
@@ -288,6 +302,7 @@ fun UserHomeUiStateSuccess(
                                     )
                                 }
                             }
+
                             is FoodHomeUiState.Success -> {
                                 state.data.forEach { food ->
                                     item {

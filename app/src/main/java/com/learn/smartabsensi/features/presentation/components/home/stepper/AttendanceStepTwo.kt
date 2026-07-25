@@ -79,21 +79,21 @@ fun AttendanceStepTwo(
         item {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 listVerifMethod.forEach {
                     val isFocused = it.title == selectedMethod
 
                     VerifMethod(
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.weight(1f).height(140.dp),
                         isFocused = isFocused,
                         title = it.title,
                         descrip = it.descrip,
                         icon = it.icon
-                    ) { title ->
+                    ) { isSelected ->
                         listVerifMethod.forEach {
-                            selectedMethod = title
+                            selectedMethod = isSelected
                         }
                     }
                 }
@@ -153,8 +153,8 @@ fun AttendanceStepTwo(
 
         item {
             Row(
-                modifier = Modifier.fillMaxWidth().padding(12.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Button(
                     onClick = {
@@ -177,7 +177,7 @@ fun AttendanceStepTwo(
                     Icon(
                         painter = painterResource(id = R.drawable.ic_arrow_left),
                         contentDescription = null,
-                        modifier = Modifier.size(30.dp)
+                        modifier = Modifier.size(26.dp)
                     )
                     Text(
                         text = "Kembali",
@@ -225,7 +225,7 @@ fun AttendanceStepTwo(
                         Icon(
                             painter = painterResource(id = R.drawable.ic_arrow_right),
                             contentDescription = null,
-                            modifier = Modifier.size(30.dp)
+                            modifier = Modifier.size(26.dp)
                         )
                     }
                 }

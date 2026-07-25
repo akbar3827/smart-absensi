@@ -37,15 +37,13 @@ import com.learn.smartabsensi.core.themes.Indigo
 import com.learn.smartabsensi.core.themes.TextPrimary
 import com.learn.smartabsensi.features.presentation.view_models.LoginUiState
 import com.learn.smartabsensi.features.presentation.view_models.LoginViewModel
-import com.ramcosta.composedestinations.generated.destinations.HomePageDestination
-import com.ramcosta.composedestinations.generated.destinations.RegistPageDestination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Composable
 fun LoginForm(
-    navigator: DestinationsNavigator,
     modifier: Modifier = Modifier,
-    lvm: LoginViewModel
+    lvm: LoginViewModel,
+    onHomePageClick: () -> Unit,
+    onRegistPageClick: () -> Unit
 ) {
     val loginUiState by lvm.loginUiState.collectAsStateWithLifecycle()
 
@@ -67,7 +65,7 @@ fun LoginForm(
 
     LaunchedEffect(key1 = loginUiState) {
         if (loginUiState is LoginUiState.Success) {
-            navigator.navigate(HomePageDestination)
+            onHomePageClick()
         }
     }
     Column(
@@ -118,7 +116,7 @@ fun LoginForm(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(60.dp)
+                .height(50.dp)
                 .shadow(
                     elevation = 10.dp,
                     clip = true,
@@ -144,14 +142,13 @@ fun LoginForm(
                     Text(
                         text =  "Masuk Sekarang",
                         color = Color.White,
-                        fontSize = 20.sp,
                         fontWeight = FontWeight.Bold
                     )
                     Icon(
                         painter = painterResource(id = R.drawable.ic_arrow_right),
                         contentDescription = null,
                         tint = Color.White,
-                        modifier = Modifier.size(32.dp)
+                        modifier = Modifier.size(26.dp)
                     )
                 }
             }
@@ -175,7 +172,7 @@ fun LoginForm(
                     interactionSource = remember { MutableInteractionSource() },
                     indication = null
                 ) {
-                    navigator.navigate(RegistPageDestination)
+                    onRegistPageClick()
                 }
             )
         }

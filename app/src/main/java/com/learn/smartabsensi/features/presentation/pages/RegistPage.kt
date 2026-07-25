@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import com.learn.smartabsensi.core.themes.Background
 import com.learn.smartabsensi.core.themes.Indigo
@@ -36,17 +37,13 @@ import com.learn.smartabsensi.features.presentation.components.RegistFormStepOne
 import com.learn.smartabsensi.features.presentation.components.RegistFormStepThree
 import com.learn.smartabsensi.features.presentation.components.RegistFormStepTwo
 import com.learn.smartabsensi.features.presentation.view_models.RegistViewModel
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.annotation.RootGraph
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
-@Destination<RootGraph>
 @Composable
 fun RegistPage(
-    navigator: DestinationsNavigator,
-    rvm: RegistViewModel
+    rvm: RegistViewModel = viewModel(),
+    onLoginPageClick: () -> Unit
 ) {
-    var step = remember {
+    val step = remember {
         mutableStateOf(0)
     }
     val targetWeightBar = if(step.value <= 1) step.value * 0.5f else 1f
@@ -85,28 +82,17 @@ fun RegistPage(
                 .fillMaxWidth(),
             contentScale = ContentScale.Crop
         )
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp)
-                .align(Alignment.TopCenter)
-                .offset(y = 250.dp)
-                .clip(
-                    RoundedCornerShape(
-                        topStartPercent = 100,
-                        topEndPercent = 100
-                    )
-                )
-                .background(Background)
-        )
         Column(
             Modifier
+                .align(Alignment.BottomCenter)
                 .fillMaxWidth()
-                .padding(top = 300.dp)
-                .fillMaxHeight(1f)
-                .background(Background)
+                .background(color = Background,
+                    shape = RoundedCornerShape(
+                        topStartPercent = 14,
+                        topEndPercent = 14
+                    ))
                 .padding(horizontal = 26.dp)
-                .padding(top = 10.dp),
+                .padding(top = 50.dp, bottom = 20.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row(
@@ -194,7 +180,7 @@ fun RegistPage(
             Spacer(Modifier.height(20.dp))
             if (step.value == 0) {
                 RegistFormStepOne(
-                    navigator = navigator,
+                    onLoginPageClick = onLoginPageClick,
                     rvm = rvm,
                     step = step
                 )
@@ -202,7 +188,7 @@ fun RegistPage(
                 RegistFormStepTwo(rvm = rvm, step = step)
             } else {
                 RegistFormStepThree(
-                    navigator = navigator,
+                    onLoginPageClick = onLoginPageClick,
                     rvm = rvm,
                     step = step
                 )

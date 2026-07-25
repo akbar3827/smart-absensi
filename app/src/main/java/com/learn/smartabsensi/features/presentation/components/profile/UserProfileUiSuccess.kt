@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.learn.smartabsensi.core.themes.Amber
 import com.learn.smartabsensi.core.themes.Background
+import com.learn.smartabsensi.core.themes.Err
 import com.learn.smartabsensi.core.themes.Indigo
 import com.learn.smartabsensi.core.themes.Orange
 import com.learn.smartabsensi.core.themes.Purple
@@ -34,15 +35,16 @@ import com.learn.smartabsensi.core.themes.TextPrimary
 import com.learn.smartabsensi.core.themes.TextSecondary
 import com.learn.smartabsensi.features.data.models.StatAttendanceProfileModel
 import com.learn.smartabsensi.features.data.models.UserModel
-import com.learn.smartabsensi.features.presentation.components.home.TopBarHome
 import com.learn.smartabsensi.features.presentation.view_models.AttendanceProfileUiState
 import com.learn.smartabsensi.features.presentation.view_models.ProfileViewModel
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Composable
 fun UserProfileUiSuccess(
     modifier: Modifier = Modifier,
-    navigator: DestinationsNavigator,
+    onEditProfilePageClick: (UserModel) -> Unit,
+    onNotificationPagePageClick: (UserModel) -> Unit,
+    onChangePasswordPagePageClick: (UserModel) -> Unit,
+    onLoginPageClick: () -> Unit,
     pvm: ProfileViewModel,
     user: UserModel
 ) {
@@ -70,7 +72,7 @@ fun UserProfileUiSuccess(
             )
             Spacer(Modifier.height(8.dp))
             Text(
-                text = "Kelas ${user.classRoom} ${user.className}",
+                text = "Kelas ${user.classRoom}${user.className}",
                 color = Indigo
             )
             Text(
@@ -142,7 +144,7 @@ fun UserProfileUiSuccess(
                         ),
                         StatAttendanceProfileModel(
                             stat = alfa,
-                            color = Teal,
+                            color = Err,
                             category = "Alfa"
                         ),
                         StatAttendanceProfileModel(
@@ -172,7 +174,12 @@ fun UserProfileUiSuccess(
                     modifier = Modifier.fillMaxWidth()
                 )
                 Spacer(Modifier.height(8.dp))
-                AccountSetting()
+                AccountSetting(
+                    user = user,
+                    onEditProfilePageClick = onEditProfilePageClick,
+                    onNotificationPagePageClick = onNotificationPagePageClick,
+                    onChangePasswordPagePageClick = onChangePasswordPagePageClick
+                )
 
                 Spacer(Modifier.height(20.dp))
                 Text(
@@ -190,8 +197,8 @@ fun UserProfileUiSuccess(
                     modifier = Modifier.fillMaxWidth()
                 )
                 Spacer(Modifier.height(8.dp))
-                Others()
-                
+                Others(emptyScreen = { it })
+
                 Spacer(Modifier.height(20.dp))
                 LogOut(pvm = pvm, showBox = showBox)
             }
@@ -224,7 +231,7 @@ fun UserProfileUiSuccess(
     }
     if (showBox.value) {
         FloatLogoutBox(
-            navigator = navigator,
+            onLoginPageClick = onLoginPageClick,
             pvm = pvm
         ) {
             showBox.value = it

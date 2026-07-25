@@ -12,11 +12,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.learn.smartabsensi.core.themes.Background
 import com.learn.smartabsensi.core.themes.TextPrimary
-import com.learn.smartabsensi.features.data.models.ArticlesItem
+import com.learn.smartabsensi.features.data.models.UserModel
 
 @Composable
-fun NewsPage(
-    news: ArticlesItem
+fun ChangePasswordPage(
+    user: UserModel
 ) {
     Column(
         verticalArrangement = Arrangement.Center,
@@ -26,7 +26,7 @@ fun NewsPage(
             .background(Background)
     ) {
         Text(
-            text = "News Screen",
+            text = "Change password Screen",
             color = TextPrimary,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold

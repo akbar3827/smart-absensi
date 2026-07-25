@@ -1,13 +1,13 @@
-package com.learn.smartabsensi.features.presentation.components.home
+package com.learn.smartabsensi.features.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -34,25 +34,29 @@ import com.learn.smartabsensi.core.themes.TextPrimary
 import com.learn.smartabsensi.features.data.models.UserModel
 
 @Composable
-fun TopBarHome(
+fun TopBar(
     modifier: Modifier = Modifier,
-    userData: UserModel
+    user: UserModel,
+    onNotificationPageClick: (UserModel) -> Unit
 ) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
+            .padding(top = 50.dp, bottom = 4.dp)
             .fillMaxWidth()
-            .height(70.dp)
-            .padding(horizontal = 24.dp, vertical = 12.dp)
+            .background(Color.Transparent)
+            .padding(horizontal = 24.dp)
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
             AsyncImage(
-                model = userData.photoUrl ,
+                model = user.photoUrl,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .aspectRatio(1f, matchHeightConstraintsFirst = true)
+                    .size(40.dp)
                     .border(
                         width = 2.dp,
                         color = Color.White,
@@ -83,11 +87,12 @@ fun TopBarHome(
                 fontWeight = FontWeight.Bold
             )
         }
+
         Icon(
             painter = painterResource(id = R.drawable.ic_notification),
             contentDescription = "bell",
             tint = Indigo,
-            modifier = Modifier.padding(2.dp).aspectRatio(1f, matchHeightConstraintsFirst = true)
+            modifier = Modifier.size(40.dp)
                 .shadow(
                     elevation = 3.dp,
                     shape = RoundedCornerShape(12.dp),
@@ -95,6 +100,9 @@ fun TopBarHome(
                     spotColor = Indigo.copy(alpha = 0.5f)
                 )
                 .background(color = Color.White, shape = RoundedCornerShape(12.dp)).padding(10.dp)
+                .clickable {
+                    onNotificationPageClick(user)
+                }
         )
     }
 }

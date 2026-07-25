@@ -143,10 +143,10 @@ fun StartCardProfile(
                 if (index < listAttendance.size - 1) {
                     Box(
                         modifier = Modifier
-                            .padding(vertical = 12.dp)
+                            .padding(vertical = 14.dp)
                             .fillMaxHeight()
                             .width(0.8.dp)
-                            .background(Color.Gray.copy(alpha = 0.2f))
+                            .background(Color.Gray.copy(alpha = 0.1f))
                     )
                 }
             }
