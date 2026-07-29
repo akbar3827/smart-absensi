@@ -59,8 +59,6 @@ fun UserHistoryUiSuccess(
     }
 
     Scaffold(
-        modifier = Modifier
-            .fillMaxSize(),
         topBar = {
             TopBar(
                 user = user,
@@ -82,7 +80,7 @@ fun UserHistoryUiSuccess(
                 text = "Rekap Absensi",
                 color = TextPrimary,
                 fontSize = 20.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.ExtraBold
             )
             Text(
                 text = "Laporan kehadiran anda bulan ini",
@@ -116,7 +114,7 @@ fun UserHistoryUiSuccess(
                     Spacer(Modifier.height(18.dp))
                     ChartAttendance(
                         hvm = hvm,
-                        attendances = state.attendances
+                        attendances = state.attendances.filter { it.date.contains(dateNumberResult) }
                     )
                     Box(Modifier.fillMaxWidth().height(100.dp))
                 }

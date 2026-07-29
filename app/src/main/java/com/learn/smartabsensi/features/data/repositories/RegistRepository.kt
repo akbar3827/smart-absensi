@@ -14,6 +14,7 @@ class RegistRepository @Inject constructor(
 
     suspend fun setUser(
         name: String,
+        nickname: String,
         uid: String,
         email: String,
         nisn: String,
@@ -29,6 +30,7 @@ class RegistRepository @Inject constructor(
                 UserModel(
                     uid = uid,
                     name = name,
+                    nickname = nickname,
                     email = email,
                     nisn = nisn,
                     photoUrl = photoUrl,

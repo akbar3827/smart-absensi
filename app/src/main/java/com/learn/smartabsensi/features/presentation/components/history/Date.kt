@@ -25,6 +25,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.learn.smartabsensi.R
@@ -113,7 +114,8 @@ fun Date(
                             text = it,
                             color = TextSecondary,
                             fontWeight = FontWeight.Bold,
-                            modifier = Modifier.weight(1f)
+                            modifier = Modifier.weight(1f),
+                            textAlign = TextAlign.Center
                         )
                     }
                 }
@@ -206,8 +208,7 @@ fun Date(
                         Spacer(Modifier.height(2.dp))
                         Text(
                             text = it.title,
-                            fontWeight = FontWeight.SemiBold,
-                            color = TextSecondary.copy(alpha = 0.5f),
+                            color = TextSecondary.copy(alpha = 0.7f),
                             fontSize = 14.sp
                         )
                     }

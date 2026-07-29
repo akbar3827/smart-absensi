@@ -74,6 +74,12 @@ class RegistViewModel @Inject constructor(
         _fullName.value = string
     }
 
+    private var _nickname = MutableStateFlow("")
+    val nickname = _nickname.asStateFlow()
+    fun onNicknameChanged(string: String) {
+        _nickname.value = string
+    }
+
     private var _classRoom = MutableStateFlow("")
     val classRoom = _classRoom.asStateFlow()
     fun onClassRoomChanged(string: String) {
@@ -117,6 +123,7 @@ class RegistViewModel @Inject constructor(
                     uid = it.uid,
                     email = it.email,
                     name = fullName.value,
+                    nickname = nickname.value,
                     nisn = nisn.value,
                     photoUrl = photoUrl.value,
                     classRoom = classRoom.value,

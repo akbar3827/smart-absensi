@@ -1,11 +1,15 @@
 package com.learn.smartabsensi.features.presentation.components.history
 
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -41,43 +45,35 @@ fun ChartAttendance(
     val charts = listOf(
         ChartAttendanceModelType(
             title = "Hadir",
-            total = attendances.map {
-                if (it.status == "Hadir") it
-            }.size,
+            total = attendances.count { it.status == "Hadir" } + 1,
             color = Teal
         ),
         ChartAttendanceModelType(
             title = "Sakit",
-            total = attendances.map {
-                if (it.status == "Sakit") it
-            }.size,
+            total = attendances.count { it.status == "Sakit" } + 1,
             color = Amber
         ),
         ChartAttendanceModelType(
             title = "Izin",
-            total = attendances.map {
-                if (it.status == "Izin") it
-            }.size,
+            total = attendances.count { it.status == "Izin" } + 1,
             color = Orange
         ),
         ChartAttendanceModelType(
             title = "Dispen",
-            total = attendances.map {
-                if (it.status == "Dispen") it
-            }.size,
+            total = attendances.count { it.status == "Dispen" } + 1,
             color = Purple
         ),
         ChartAttendanceModelType(
             title = "Alfa",
-            total = attendances.map {
-                if (it.status == "Alfa") it else 0
-            }.size,
+            total = attendances.count { it.status == "Alfa" } + 1,
             color = Err
         )
     )
+
     Column(
         modifier = modifier
             .fillMaxWidth()
+            .height(200.dp)
             .shadow(
                 elevation = 4.dp,
                 clip = false,
@@ -95,29 +91,60 @@ fun ChartAttendance(
         )
         Spacer(Modifier.height(12.dp))
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.Bottom
         ) {
             charts.forEach { item ->
                 Column(
-                    modifier = Modifier.height(200.dp).weight(1f),
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .weight(1f),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(
-                        text = item.total.toString(),
-                        color = item.color,
-                        fontWeight = FontWeight.ExtraBold
-                    )
                     Box(
                         modifier = Modifier
-                            .fillMaxHeight((item.total/10).toFloat())
+                            .weight(1f)
                             .fillMaxWidth()
-                            .background(
+                    ) {
+                        Text(
+                            text = (item.total - 1).toString(),
                             color = item.color,
-                            shape = RoundedCornerShape(8.dp)
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.ExtraBold,
+                            modifier = Modifier
+                                .align(alignment = Alignment.BottomCenter)
+                                .padding(
+                                    bottom = animateDpAsState(
+                                        targetValue = (item.total * 8).dp,
+                                        animationSpec = tween(
+                                            durationMillis = 300,
+                                            delayMillis = 100
+                                        )
+                                    ).value
+                                )
                         )
-                    )
+                        Box(
+                            modifier = Modifier
+                                .height(
+                                    animateDpAsState(
+                                        targetValue = (item.total * 5).dp,
+                                        animationSpec = tween(
+                                            durationMillis = 300,
+                                            delayMillis = 100
+                                        )
+                                    ).value
+                                )
+                                .fillMaxWidth()
+                                .background(
+                                    color = item.color,
+                                    shape = RoundedCornerShape(topStart = 6.dp, topEnd = 6.dp)
+                                )
+                                .align(alignment = Alignment.BottomCenter)
+                        )
+                    }
                     Text(
                         text = item.title,
                         color = TextSecondary,

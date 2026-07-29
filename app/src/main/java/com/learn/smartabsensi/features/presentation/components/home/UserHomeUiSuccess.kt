@@ -43,6 +43,7 @@ import com.learn.smartabsensi.core.themes.TextPrimary
 import com.learn.smartabsensi.core.themes.TextSecondary
 import com.learn.smartabsensi.features.data.models.ArticlesItem
 import com.learn.smartabsensi.features.data.models.UserModel
+import com.learn.smartabsensi.features.presentation.components.FoodCard
 import com.learn.smartabsensi.features.presentation.components.TopBar
 import com.learn.smartabsensi.features.presentation.view_models.ArticleHomeUiState
 import com.learn.smartabsensi.features.presentation.view_models.AttendanceHomeUiState
@@ -112,7 +113,7 @@ fun UserHomeUiSuccess(
                 item {
                     Spacer(Modifier.height(40.dp))
                     Text(
-                        text = "Selamat pagi",
+                        text = "Selamat datang\uD83D\uDC4B\uD83C\uDFFB\uD83D\uDC4B\uD83C\uDFFB",
                         color = TextPrimary
                     )
                     Spacer(Modifier.height(4.dp))
@@ -123,7 +124,7 @@ fun UserHomeUiSuccess(
                                     color = Indigo
                                 )
                             ) {
-                                append(userData.name)
+                                append(userData.nickname)
                             }
                             append("")
                         },

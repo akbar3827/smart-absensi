@@ -36,7 +36,7 @@ fun LoginPage(
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         AsyncImage(
-            model = "https://i.pinimg.com/1200x/3c/64/01/3c64010a9347ae510af5974406723363.jpg",
+            model = "https://i.pinimg.com/736x/20/04/09/200409cd313f72659fa56a5a755a71e9.jpg",
             contentDescription = "background",
             modifier = Modifier.matchParentSize(),
             contentScale = ContentScale.Crop
@@ -48,8 +48,8 @@ fun LoginPage(
                 .background(
                     color = IndigoSoft,
                     shape = RoundedCornerShape(
-                        topStartPercent = 14,
-                        topEndPercent = 14
+                        topStartPercent = 10,
+                        topEndPercent = 10
                     )
                 )
                 .padding(horizontal = 26.dp)

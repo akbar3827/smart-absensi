@@ -81,7 +81,11 @@ fun NavigationRoot(
 
                 is Route.Canteen -> {
                     NavEntry(key) {
-                        CanteenPage()
+                        CanteenPage(
+                            onNotificationPageClick = {
+                                backStack.add(Route.Notification(it))
+                            }
+                        )
                     }
                 }
 

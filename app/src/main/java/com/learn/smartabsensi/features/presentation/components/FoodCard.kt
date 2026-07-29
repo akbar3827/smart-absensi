@@ -1,4 +1,4 @@
-package com.learn.smartabsensi.features.presentation.components.home
+package com.learn.smartabsensi.features.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

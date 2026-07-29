@@ -65,6 +65,10 @@ fun RegistFormStepTwo(
     var errorFullName by remember { mutableStateOf(false) }
     var errorMessageFullName by remember { mutableStateOf("") }
 
+    val nickname by rvm.nickname.collectAsStateWithLifecycle()
+    var errorNickname by remember { mutableStateOf(false) }
+    var errorNicknameMessage by remember { mutableStateOf("") }
+
     val classRoom by rvm.classRoom.collectAsStateWithLifecycle()
     var errorClassRoom by remember { mutableStateOf(false) }
     var errorMessageClassRoom by remember { mutableStateOf("") }
@@ -96,7 +100,8 @@ fun RegistFormStepTwo(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Box(modifier = Modifier.size(150.dp)
+        Box(
+            modifier = Modifier.size(150.dp)
         ) {
             AsyncImage(
                 model = "https://i.pinimg.com/1200x/30/e5/18/30e5185980e8eca9a44f8647f7780d0c.jpg",
@@ -119,7 +124,8 @@ fun RegistFormStepTwo(
                     .clip(CircleShape)
             )
             Box(
-                modifier = Modifier.size(35.dp)
+                modifier = Modifier
+                    .size(35.dp)
                     .align(Alignment.BottomEnd)
                     .offset(x = -4.dp, y = -10.dp)
                     .shadow(
@@ -153,7 +159,20 @@ fun RegistFormStepTwo(
             }
         )
         Spacer(Modifier.height(16.dp))
-        Row(Modifier.fillMaxWidth(),
+        TextField(
+            icon = R.drawable.ic_user_thin,
+            nameField = "Nama panggilan",
+            value = nickname,
+            defaultInnerTextField = "Nama panggilan anda sesuai dengan rapor",
+            isNotMeetRequired = errorNickname,
+            onValueChange = {
+                rvm.onNicknameChanged(it)
+                errorNickname = false
+            }
+        )
+        Spacer(Modifier.height(16.dp))
+        Row(
+            Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Selection(
@@ -185,9 +204,9 @@ fun RegistFormStepTwo(
             color = TextPrimary,
             modifier = Modifier.fillMaxWidth()
         )
-            Gender {
-                rvm.onGenderChanged(it)
-            }
+        Gender {
+            rvm.onGenderChanged(it)
+        }
         Spacer(Modifier.height(16.dp))
         Text(
             text = errMessage,
@@ -247,6 +266,10 @@ fun RegistFormStepTwo(
                     if (fullName.isEmpty()) {
                         errorFullName = true
                         errorMessageFullName = "name is required"
+
+                    } else if (nickname.isEmpty()) {
+                        errorNickname = true
+                        errorNicknameMessage = "nickname is required"
 
                     } else if (classRoom.isEmpty() || classRoom == opsiPilihanKelas[0]) {
                         errorClassRoom = true

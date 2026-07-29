@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -23,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
@@ -75,7 +75,7 @@ fun RegistPage(
 
     Box(modifier = Modifier.fillMaxSize()) {
         AsyncImage(
-            model = "https://i.pinimg.com/1200x/3c/64/01/3c64010a9347ae510af5974406723363.jpg",
+            model = "https://i.pinimg.com/736x/20/04/09/200409cd313f72659fa56a5a755a71e9.jpg",
             contentDescription = "background",
             modifier = Modifier
                 .fillMaxHeight(0.5f)
@@ -86,10 +86,20 @@ fun RegistPage(
             Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
+                .shadow(
+                    elevation = 8.dp,
+                    clip = false,
+                    shape = RoundedCornerShape(
+                        topStartPercent = 10,
+                        topEndPercent = 10
+                    ),
+                    ambientColor = Background,
+                    spotColor = Background
+                )
                 .background(color = Background,
                     shape = RoundedCornerShape(
-                        topStartPercent = 14,
-                        topEndPercent = 14
+                        topStartPercent = 10,
+                        topEndPercent = 10
                     ))
                 .padding(horizontal = 26.dp)
                 .padding(top = 50.dp, bottom = 20.dp),
