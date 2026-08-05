@@ -14,18 +14,35 @@ class FoodRepository @Inject constructor(
         private val COLLECTION_NAME = "canteen_food"
     }
 
-    suspend fun getFood(): Result<List<FoodModel>> {
+    suspend fun getFood(
+        typeFood: String? = null,
+        search: String? = null
+    ): Result<List<FoodModel>> {
         return try {
-            val snapshot = db.collection(COLLECTION_NAME)
-                .get()
-                .await()
+
+            val snapshot =
+                if (!search.isNullOrBlank() && !typeFood.isNullOrBlank() && !typeFood.equals("semua", ignoreCase = true)) {
+                    db.collection(COLLECTION_NAME).whereEqualTo("type", typeFood.lowercase().trim())
+                        .whereEqualTo("productName", search.lowercase().trim())
+                        .get().await()
+                } else if (!search.isNullOrBlank()) {
+                    db.collection(COLLECTION_NAME)
+                        .whereGreaterThanOrEqualTo("productName", search.lowercase().trim()).get()
+                        .await()
+                } else if (!typeFood.isNullOrBlank() && !typeFood.equals("semua", ignoreCase = true)) {
+                    db.collection(COLLECTION_NAME)
+                        .whereEqualTo("type", typeFood.lowercase().trim()).get()
+                        .await()
+                } else {
+                    db.collection(COLLECTION_NAME).get().await()
+                }
 
             val food = snapshot.documents.mapNotNull {
                 it.toObject(FoodModel::class.java)
             }
             Result.success(food)
         } catch (e: Exception) {
-            Log.e("FoodRepository", "Erro fetching canteen_food")
+            Log.e("FoodRepository", "Error fetching $COLLECTION_NAME: ${e.message}")
             Result.failure(e)
         }
     }

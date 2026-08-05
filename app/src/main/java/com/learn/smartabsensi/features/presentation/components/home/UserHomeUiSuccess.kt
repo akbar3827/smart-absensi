@@ -2,8 +2,10 @@ package com.learn.smartabsensi.features.presentation.components.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,8 +13,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -60,11 +63,13 @@ import java.time.format.DateTimeFormatter
 fun UserHomeUiSuccess(
     hvm: HomeViewModel,
     userData: UserModel,
-    onNewsPageClick: (ArticlesItem) -> Unit,
+    onNewsPageClick: (UserModel, List<ArticlesItem?>) -> Unit,
+    onNewsCLick: (ArticlesItem) -> Unit,
     onNotificationPageClick: (UserModel) -> Unit
 ) {
     val scope = rememberCoroutineScope()
     val newsHomeUiState by hvm.newsHomeUiState.collectAsStateWithLifecycle()
+    val news by hvm.news.collectAsStateWithLifecycle()
     val attendanceUiState by hvm.attendanceHomeUiState.collectAsStateWithLifecycle()
     val articleHomeUiState by hvm.articleHomeUiState.collectAsStateWithLifecycle()
     val foodHomeUiState by hvm.foodHomeUiState.collectAsStateWithLifecycle()
@@ -103,240 +108,246 @@ fun UserHomeUiSuccess(
                 )
             }
         ) { paddingValues ->
-            LazyColumn(
+            Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Background)
                     .padding(paddingValues)
                     .padding(horizontal = 16.dp)
+                    .verticalScroll(rememberScrollState())
             ) {
-                item {
-                    Spacer(Modifier.height(40.dp))
+                Spacer(Modifier.height(40.dp))
+                Text(
+                    text = "Selamat datang\uD83D\uDC4B\uD83C\uDFFB\uD83D\uDC4B\uD83C\uDFFB",
+                    color = TextPrimary
+                )
+                Spacer(Modifier.height(4.dp))
+                Text(
+                    text = buildAnnotatedString {
+                        withStyle(
+                            style = SpanStyle(
+                                color = Indigo
+                            )
+                        ) {
+                            append(userData.nickname)
+                        }
+                        append("")
+                    },
+                    color = TextPrimary,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+                Spacer(Modifier.height(4.dp))
+                Text(
+                    text = "Sudah siap belajar hari ini? Jangan lupa absen yaa.",
+                    color = TextSecondary
+                )
+                Spacer(Modifier.height(40.dp))
+                Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                    AbsensiCard(
+                        currentTime = currentTime
+                    ) {
+                        showBottomSheet = it
+                    }
+                }
+                if (showBottomSheet) {
+                    BottomSheetAttendance(
+                        hvm = hvm,
+                        user = userData,
+                        sheetState = sheetState,
+                        currentTime = currentTime,
+                        attendanceColor = attendanceColor
+                    ) {
+                        showBottomSheet = it
+                        if (alreadyAbsent.isNotEmpty()) {
+                            scope.launch {
+                                snackbarHostState.showSnackbar(alreadyAbsent)
+
+                                hvm.onAlreadyAttendMessage("")
+                            }
+                        }
+                    }
+                }
+
+                Spacer(Modifier.height(8.dp))
+                when (val state = attendanceUiState) {
+                    is AttendanceHomeUiState.IsLoading -> {
+                        CircularProgressIndicator()
+                    }
+
+                    is AttendanceHomeUiState.Error -> {
+                        Text("")
+                    }
+
+                    is AttendanceHomeUiState.Success -> {
+                        AttendanceCard(state.data)
+                    }
+                }
+
+                Spacer(Modifier.height(20.dp))
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .padding(6.dp)
+                        .fillMaxWidth()
+                        .height(40.dp)
+                ) {
                     Text(
-                        text = "Selamat datang\uD83D\uDC4B\uD83C\uDFFB\uD83D\uDC4B\uD83C\uDFFB",
+                        text = "berita terbaru",
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 18.sp,
                         color = TextPrimary
                     )
-                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        text = "Lihat semua",
+                        color = DarkIndigo,
+                        modifier = Modifier.clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null
+                        ) {
+                            onNewsPageClick(userData, news)
+                        }
+                    )
+                }
+                LazyRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(14.dp)
+                ) {
+                    when (val state = newsHomeUiState) {
+                        is NewsHomeUiState.IsLoading -> {
+                            item { CircularProgressIndicator() }
+                        }
+
+                        is NewsHomeUiState.Error -> {
+                            item { Text(text = state.message) }
+                        }
+
+                        is NewsHomeUiState.Success -> {
+                            state.data.forEach { news ->
+                                item {
+                                    NewsCardHome(
+                                        id = news.author,
+                                        title = news.title,
+                                        description = news.description,
+                                        image = news.imageUrl,
+                                        category = news.category
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+                    when (val state = articleHomeUiState) {
+                        is ArticleHomeUiState.IsLoading -> {
+                            item {
+                                CircularProgressIndicator()
+                            }
+                        }
+
+                        is ArticleHomeUiState.Error -> {
+                            item {
+                                Text(text = state.message)
+                            }
+                        }
+
+                        is ArticleHomeUiState.Success -> {
+                            hvm.onNewsChanged(news = state.data.articles ?: emptyList())
+                            state.data.articles?.forEachIndexed { index, news ->
+                                if (news != null && index < 15) {
+                                    item {
+                                        NewsCardHome(
+                                            modifier = Modifier.clickable {
+                                                onNewsCLick(news)
+                                            },
+                                            id = news.author ?: "",
+                                            title = news.title ?: "",
+                                            description = news.description ?: "",
+                                            image = news.urlToImage ?: "",
+                                            category = "info"
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                Spacer(Modifier.height(20.dp))
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .padding(6.dp)
+                        .fillMaxWidth()
+                        .height(40.dp)
+                ) {
+                    Text(
+                        text = "Menu terlaris",
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 18.sp,
+                        color = TextPrimary
+                    )
+                    Text(
+                        text = "Kantin",
+                        color = DarkIndigo
+                    )
+                }
+
+                LazyRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    when (val state = foodHomeUiState) {
+                        is FoodHomeUiState.IsLoading -> {
+                            item {
+                                CircularProgressIndicator()
+                            }
+                        }
+
+                        is FoodHomeUiState.Error -> {
+                            item {
+                                Text(
+                                    text = state.message
+                                )
+                            }
+                        }
+
+                        is FoodHomeUiState.Success -> {
+                            state.data.forEach { food ->
+                                item {
+                                    FoodCard(
+                                        foodModel = food
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                        .background(color = Background),
+                    contentAlignment = Alignment.Center
+                ) {
                     Text(
                         text = buildAnnotatedString {
+                            append("created by ")
                             withStyle(
                                 style = SpanStyle(
                                     color = Indigo
                                 )
                             ) {
-                                append(userData.nickname)
+                                append("MOH. AKBAR KURNIAWAN")
                             }
-                            append("")
                         },
                         color = TextPrimary,
-                        fontSize = 24.sp,
                         fontWeight = FontWeight.SemiBold
                     )
-                    Spacer(Modifier.height(4.dp))
-                    Text(
-                        text = "Sudah siap belajar hari ini? Jangan lupa absen yaa.",
-                        color = TextSecondary
-                    )
-                    Spacer(Modifier.height(40.dp))
-                    Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                        AbsensiCard(
-                            currentTime = currentTime
-                        ) {
-                            showBottomSheet = it
-                        }
-                    }
-                    if (showBottomSheet) {
-                        BottomSheetAttendance(
-                            hvm = hvm,
-                            user = userData,
-                            sheetState = sheetState,
-                            currentTime = currentTime,
-                            attendanceColor = attendanceColor
-                        ) {
-                            showBottomSheet = it
-                            if (alreadyAbsent.isNotEmpty()) {
-                                scope.launch {
-                                    snackbarHostState.showSnackbar(alreadyAbsent)
-
-                                    hvm.onAlreadyAttendMessage("")
-                                }
-                            }
-                        }
-                    }
-
-                    Spacer(Modifier.height(8.dp))
-                    when (val state = attendanceUiState) {
-                        is AttendanceHomeUiState.IsLoading -> {
-                            CircularProgressIndicator()
-                        }
-
-                        is AttendanceHomeUiState.Error -> {
-                            Text("")
-                        }
-
-                        is AttendanceHomeUiState.Success -> {
-                            AttendanceCard(state.data)
-                        }
-                    }
-
-                    Spacer(Modifier.height(20.dp))
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .padding(6.dp)
-                            .fillMaxWidth()
-                            .height(40.dp)
-                    ) {
-                        Text(
-                            text = "berita terbaru",
-                            fontWeight = FontWeight.SemiBold,
-                            fontSize = 18.sp,
-                            color = TextPrimary
-                        )
-                        Text(
-                            text = "Lihat semua",
-                            color = DarkIndigo
-                        )
-                    }
-                    LazyRow(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(14.dp)
-                    ) {
-                        when (val state = newsHomeUiState) {
-                            is NewsHomeUiState.IsLoading -> {
-                                item { CircularProgressIndicator() }
-                            }
-
-                            is NewsHomeUiState.Error -> {
-                                item { Text(text = state.message) }
-                            }
-
-                            is NewsHomeUiState.Success -> {
-                                state.data.forEach { news ->
-                                    item {
-                                        NewsCard(
-                                            id = news.author,
-                                            title = news.title,
-                                            description = news.description,
-                                            image = news.imageUrl,
-                                            category = news.category
-                                        )
-                                    }
-                                }
-                            }
-                        }
-
-                        when (val state = articleHomeUiState) {
-                            is ArticleHomeUiState.IsLoading -> {
-                                item {
-                                    CircularProgressIndicator()
-                                }
-                            }
-
-                            is ArticleHomeUiState.Error -> {
-                                item {
-                                    Text(text = state.message)
-                                }
-                            }
-
-                            is ArticleHomeUiState.Success -> {
-                                state.data.articles?.forEachIndexed { index, news ->
-                                    if (news != null && index < 15) {
-                                        item {
-                                            NewsCard(
-                                                modifier = Modifier.clickable {
-                                                    onNewsPageClick(news)
-                                                },
-                                                id = news.author ?: "",
-                                                title = news.title ?: "",
-                                                description = news.description ?: "",
-                                                image = news.urlToImage ?: "",
-                                                category = "info"
-                                            )
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    Spacer(Modifier.height(20.dp))
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .padding(6.dp)
-                            .fillMaxWidth()
-                            .height(40.dp)
-                    ) {
-                        Text(
-                            text = "Menu terlaris",
-                            fontWeight = FontWeight.SemiBold,
-                            fontSize = 18.sp,
-                            color = TextPrimary
-                        )
-                        Text(
-                            text = "Kantin",
-                            color = DarkIndigo
-                        )
-                    }
-
-                    LazyRow(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 16.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-                        when (val state = foodHomeUiState) {
-                            is FoodHomeUiState.IsLoading -> {
-                                item {
-                                    CircularProgressIndicator()
-                                }
-                            }
-
-                            is FoodHomeUiState.Error -> {
-                                item {
-                                    Text(
-                                        text = state.message
-                                    )
-                                }
-                            }
-
-                            is FoodHomeUiState.Success -> {
-                                state.data.forEach { food ->
-                                    item {
-                                        FoodCard(
-                                            foodModel = food
-                                        )
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(200.dp)
-                            .background(color = Background),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = buildAnnotatedString {
-                                append("created by ")
-                                withStyle(
-                                    style = SpanStyle(
-                                        color = Indigo
-                                    )
-                                ) {
-                                    append("MOH. AKBAR KURNIAWAN")
-                                }
-                            },
-                            color = TextPrimary,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                    }
                 }
             }
         }

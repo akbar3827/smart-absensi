@@ -17,8 +17,9 @@ import com.learn.smartabsensi.features.presentation.view_models.UserHomeUiState
 @Composable
 fun HomePage(
     hvm: HomeViewModel = viewModel(),
-    onNewsPageClick: (ArticlesItem) -> Unit,
-    onNotificationPageClick: (UserModel) -> Unit
+    onNewsPageClick: (UserModel, List<ArticlesItem?>) -> Unit,
+    onNotificationPageClick: (UserModel) -> Unit,
+    onNewsCLick: (ArticlesItem) -> Unit
 ) {
     val userHomeUiState by hvm.userHomeUiState.collectAsStateWithLifecycle()
 
@@ -34,6 +35,7 @@ fun HomePage(
                 hvm = hvm,
                 userData = state.data,
                 onNewsPageClick = onNewsPageClick,
+                onNewsCLick = onNewsCLick,
                 onNotificationPageClick = onNotificationPageClick
             )
         }

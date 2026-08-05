@@ -37,6 +37,12 @@ class CanteenViewModel @Inject constructor(
         _search.value = string
     }
 
+    private val _typeFood = MutableStateFlow("")
+    val typeFood = _typeFood.asStateFlow()
+    fun onTypeFoodChanged(string: String) {
+        _typeFood.value = string
+    }
+
     init {
         getFood()
         getUser()
@@ -56,7 +62,10 @@ class CanteenViewModel @Inject constructor(
 
     fun getFood() {
         viewModelScope.launch {
-            val result = foodRepo.getFood()
+            val result = foodRepo.getFood(
+                search = _search.value,
+                typeFood = _typeFood.value
+            )
 
             result.onSuccess { foods ->
                 _food.update { CanteenFoodUiState.Success(foods) }

@@ -1,35 +1,54 @@
 package com.learn.smartabsensi.features.presentation.pages.sub_pages
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.dp
 import com.learn.smartabsensi.core.themes.Background
-import com.learn.smartabsensi.core.themes.TextPrimary
 import com.learn.smartabsensi.features.data.models.ArticlesItem
+import com.learn.smartabsensi.features.presentation.components.news.NewsCard
+import com.learn.smartabsensi.features.presentation.components.news.TopBarPreviousPage
 
 @Composable
 fun NewsPage(
-    news: ArticlesItem
+    modifier: Modifier = Modifier,
+    news: List<ArticlesItem?>,
+    onPreviousPage: () -> Unit,
+    onNews: (ArticlesItem) -> Unit
 ) {
-    Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Background)
-    ) {
-        Text(
-            text = "News Screen",
-            color = TextPrimary,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold
-        )
+    Scaffold(
+        topBar = {
+            TopBarPreviousPage(
+                onPreviousPage = onPreviousPage
+            )
+        }
+    ) { paddingValues ->
+        LazyColumn(
+            modifier = modifier
+                .fillMaxSize()
+                .background(Background)
+                .padding(horizontal = 18.dp)
+                .padding(paddingValues),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            news.filter { it != null }.forEach {
+                item {
+                    NewsCard(
+                        modifier = Modifier.clickable {
+                            if (it != null) {
+                                onNews(it)
+                            }
+                        },
+                        news = it
+                    )
+                }
+            }
+        }
     }
 }

@@ -16,6 +16,7 @@ import com.learn.smartabsensi.features.presentation.pages.ProfilePage
 import com.learn.smartabsensi.features.presentation.pages.RegistPage
 import com.learn.smartabsensi.features.presentation.pages.sub_pages.ChangePasswordPage
 import com.learn.smartabsensi.features.presentation.pages.sub_pages.ChangeProfilePage
+import com.learn.smartabsensi.features.presentation.pages.sub_pages.News
 import com.learn.smartabsensi.features.presentation.pages.sub_pages.NewsPage
 import com.learn.smartabsensi.features.presentation.pages.sub_pages.NotificationPage
 import com.learn.smartabsensi.features.presentation.pages.sub_pages.PreferenceNotificationPage
@@ -59,11 +60,14 @@ fun NavigationRoot(
                 is Route.Home -> {
                     NavEntry(key) {
                         HomePage(
-                            onNewsPageClick = {
-                                backStack.add(Route.News(it))
+                            onNewsPageClick = { user, article ->
+                                backStack.add(Route.AmountOfNews(news = article, user = user))
                             },
                             onNotificationPageClick = {
                                 backStack.add(Route.Notification(it))
+                            },
+                            onNewsCLick = { news ->
+                                backStack.add(Route.News(news))
                             }
                         )
                     }
@@ -140,14 +144,32 @@ fun NavigationRoot(
                     }
                 }
 
-                is Route.News -> {
+                is Route.AmountOfNews -> {
                     NavEntry(key) {
                         NewsPage(
-                            news = key.news
+                            news = key.news,
+                            onPreviousPage = {
+                                if (backStack.size > 1) {
+                                    backStack.removeAt(backStack.size - 1)
+                                }
+                            },
+                            onNews = { articlesItem ->
+                                backStack.add(Route.News(articlesItem))
+                            }
                         )
                     }
                 }
-
+                is Route.News -> {
+                    NavEntry(key) {
+                        News(
+                           news = key.news
+                        ) {
+                            if (backStack.size > 1) {
+                                backStack.removeAt(backStack.size - 1)
+                            }
+                        }
+                    }
+                }
                 else -> error("Unknown NavKey $key")
             }
         }

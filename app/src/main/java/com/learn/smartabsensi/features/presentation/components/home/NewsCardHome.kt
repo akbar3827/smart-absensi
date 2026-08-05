@@ -30,7 +30,7 @@ import com.learn.smartabsensi.core.themes.TextPrimary
 import com.learn.smartabsensi.core.themes.TextSecondary
 
 @Composable
-fun NewsCard(
+fun NewsCardHome(
     modifier: Modifier = Modifier,
     id: String,
     title: String,

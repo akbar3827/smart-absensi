@@ -6,5 +6,7 @@ data class FoodModel(
     val price: Int = 0,
     val description: String = "",
     val imageUrl: String = "",
-    val available: Boolean = false
+    val available: Boolean = false,
+    val type: String = "",
+    val productName: String = ""
 )

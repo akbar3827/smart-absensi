@@ -7,6 +7,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.learn.smartabsensi.core.networkings.ApiConfig
 import com.learn.smartabsensi.core.themes.Indigo
 import com.learn.smartabsensi.features.data.models.ArticleResponse
+import com.learn.smartabsensi.features.data.models.ArticlesItem
 import com.learn.smartabsensi.features.data.models.AttendanceModel
 import com.learn.smartabsensi.features.data.models.FoodModel
 import com.learn.smartabsensi.features.data.models.NewsModel
@@ -119,6 +120,13 @@ class HomeViewModel @Inject constructor(
     val attendanceNote = _attendanceNote.asStateFlow()
     fun onAttendanceNoteChanged(string: String) {
         _attendanceNote.value = string
+    }
+
+    private var _news =
+        MutableStateFlow(emptyList<ArticlesItem?>())
+    val news = _news.asStateFlow()
+    fun onNewsChanged(news: List<ArticlesItem?>) {
+        _news.value = news
     }
 
     init {

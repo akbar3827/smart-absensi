@@ -68,6 +68,7 @@ class MainActivity : ComponentActivity() {
                             subclass(Route.ChangeProfile::class, Route.ChangeProfile.serializer())
                             subclass(Route.PreferenceNotification::class, Route.PreferenceNotification.serializer())
                             subclass(Route.ChangePassword::class, Route.ChangePassword.serializer())
+                            subclass(Route.AmountOfNews::class, Route.AmountOfNews.serializer())
                             subclass(Route.News::class, Route.News.serializer())
                         }
                     }
