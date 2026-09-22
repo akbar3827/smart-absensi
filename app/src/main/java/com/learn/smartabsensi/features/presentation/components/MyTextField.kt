@@ -38,10 +38,10 @@ import com.learn.smartabsensi.core.themes.IndigoLigth
 import com.learn.smartabsensi.core.themes.TextPrimary
 
 @Composable
-fun TextField(
+fun MyTextField(
     modifier: Modifier = Modifier,
     icon: Int,
-    nameField: String,
+    tabel: String,
     value: String,
     defaultInnerTextField: String,
     isUnavailable: Boolean = false,
@@ -57,7 +57,7 @@ fun TextField(
             textField
         ) = createRefs()
         Text(
-            text = nameField,
+            text = tabel,
             fontWeight = FontWeight.Bold,
             color = TextPrimary,
             fontSize = 14.sp,

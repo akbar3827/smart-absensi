@@ -90,8 +90,8 @@ fun RegistFormStepOne(
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(Modifier.height(20.dp))
-        TextField(
-            nameField = "NISN",
+        MyTextField(
+            tabel = "NISN",
             value = nisn,
             isNotMeetRequired = errorNisn,
             icon = R.drawable.ic_user_thin,
@@ -103,9 +103,9 @@ fun RegistFormStepOne(
             }
         )
         Spacer(Modifier.height(12.dp))
-        TextField(
+        MyTextField(
             icon = R.drawable.ic_email,
-            nameField = "Email",
+            tabel = "Email",
             value = email,
             defaultInnerTextField = "smartabsen@gmail.com",
             isNotMeetRequired = errorEmail,
@@ -116,9 +116,9 @@ fun RegistFormStepOne(
             }
         )
         Spacer(Modifier.height(12.dp))
-        TextField(
+        MyTextField(
             icon = R.drawable.ic_call,
-            nameField = "Nomor Telepon",
+            tabel = "Nomor Telepon",
             value = numberPhone,
             defaultInnerTextField = "08xxxxxxxxxx",
             isNotMeetRequired = errorNumberPhone,

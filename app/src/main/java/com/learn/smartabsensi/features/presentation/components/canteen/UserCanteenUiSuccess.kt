@@ -25,6 +25,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -56,6 +57,9 @@ fun UserCanteenUiSuccess(
 ) {
     val searchValue by cvm.search.collectAsStateWithLifecycle()
     val selectedType by cvm.typeFood.collectAsStateWithLifecycle()
+    val selectedFood by cvm.selectedFood.collectAsStateWithLifecycle()
+    val bottomBarShowed by cvm.bottomBarShowed.collectAsStateWithLifecycle()
+    val orderQuantity by cvm.orderQuantity.collectAsStateWithLifecycle()
     val typeFood = remember {
         listOf(
             "Semua",
@@ -85,6 +89,17 @@ fun UserCanteenUiSuccess(
                 user = user,
                 onNotificationPageClick = onNotificationPageClick
             )
+        },
+        bottomBar = {
+            if (bottomBarShowed) {
+                selectedFood?.let {
+                    BottomBarOrder(
+                        cvm = cvm,
+                        orderQuantity = orderQuantity,
+                        foodItem = it
+                    )
+                }
+            }
         }
     ) { paddingValues ->
         Column(
@@ -184,7 +199,14 @@ fun UserCanteenUiSuccess(
                     }
                 } else {
                     items(foods.size) {
-                        FoodCard(foodModel = foods[it])
+                        FoodCard(
+                            modifier = Modifier.clickable {
+                                cvm.bottomBarShowedChanged(true)
+                                cvm.selectedFoodChanged(foods[it])
+                            },
+                            foodModel = foods[it],
+                            vm = cvm
+                        )
                     }
                 }
             }

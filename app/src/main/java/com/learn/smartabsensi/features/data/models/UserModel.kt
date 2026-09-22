@@ -15,6 +15,10 @@ data class UserModel(
     val className: String = "",
     val gender: String = "",
     val createdAt: String = "",
+    val address: String = "",
+    val religion: String = "",
+    val numberphone: String = "",
+    val biodata: String = "",
     val favoriteFood: FoodFavModel = FoodFavModel(),
     val cartFood: FoodCartModel = FoodCartModel()
 )

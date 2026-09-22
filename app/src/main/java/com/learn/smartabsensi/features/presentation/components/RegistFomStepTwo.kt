@@ -147,9 +147,9 @@ fun RegistFormStepTwo(
             }
         }
         Spacer(Modifier.height(12.dp))
-        TextField(
+        MyTextField(
             icon = R.drawable.ic_user_thin,
-            nameField = "Nama lengkap",
+            tabel = "Nama lengkap",
             value = fullName,
             defaultInnerTextField = "Nama lengkap sesuai rapor",
             isNotMeetRequired = errorFullName,
@@ -159,11 +159,11 @@ fun RegistFormStepTwo(
             }
         )
         Spacer(Modifier.height(16.dp))
-        TextField(
+        MyTextField(
             icon = R.drawable.ic_user_thin,
-            nameField = "Nama panggilan",
+            tabel = "Nama panggilan",
             value = nickname,
-            defaultInnerTextField = "Nama panggilan anda sesuai dengan rapor",
+            defaultInnerTextField = "Nama panggilan anda",
             isNotMeetRequired = errorNickname,
             onValueChange = {
                 rvm.onNicknameChanged(it)
@@ -178,7 +178,7 @@ fun RegistFormStepTwo(
             Selection(
                 modifier = Modifier.weight(1f),
                 fieldName = "Kelas",
-                opsiPilihan = opsiPilihanKelas,
+                selectionOption = opsiPilihanKelas,
                 selectedOption = classRoom,
                 isNotMeetRequirement = errorClassRoom
             ) {
@@ -188,7 +188,7 @@ fun RegistFormStepTwo(
             Selection(
                 modifier = Modifier.weight(1f),
                 fieldName = "Nama kelas",
-                opsiPilihan = opsiPilihanNamaKelas,
+                selectionOption = opsiPilihanNamaKelas,
                 selectedOption = className,
                 isNotMeetRequirement = errorClassName
             ) {

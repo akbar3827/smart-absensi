@@ -1,8 +1,10 @@
 package com.learn.smartabsensi.features.presentation.components.home
 
+import android.graphics.Bitmap
 import android.graphics.drawable.Icon
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -32,6 +34,7 @@ private data class KindOfProofType(
 @Composable
 fun KindOfProof(
     modifier: Modifier = Modifier,
+    onClick: () -> Unit
 ) {
     val listOfProof = listOf(
         KindOfProofType(
@@ -60,7 +63,8 @@ fun KindOfProof(
                     .weight(1f)
                     .clip(RoundedCornerShape(12.dp))
                     .background(color = Background, shape = RoundedCornerShape(12.dp))
-                    .padding(horizontal = 16.dp, vertical = 10.dp),
+                    .padding(horizontal = 16.dp, vertical = 10.dp)
+                    .clickable { if (item.title == "Kamera") onClick() },
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {

@@ -40,7 +40,7 @@ import com.learn.smartabsensi.core.themes.TextPrimary
 fun Selection(
     modifier: Modifier = Modifier,
     fieldName: String,
-    opsiPilihan: List<String>,
+    selectionOption: List<String>,
     selectedOption: String,
     isNotMeetRequirement: Boolean,
     onOptionSelected: (String) -> Unit
@@ -89,9 +89,9 @@ fun Selection(
                         Box(
                             Modifier.weight(1f)
                         ) {
-                            if (selectedOption.isEmpty() || selectedOption == opsiPilihan[0]) {
+                            if (selectedOption.isEmpty() || selectedOption == selectionOption[0]) {
                                 Text(
-                                    text = opsiPilihan[0],
+                                    text = selectionOption[0],
                                     color = TextPrimary
                                 )
                             } else {
@@ -144,7 +144,7 @@ fun Selection(
                 onDismissRequest = { expanded = false },
                 containerColor = Color.White
             ) {
-                opsiPilihan.forEach { pilihan ->
+                selectionOption.forEach { pilihan ->
                     DropdownMenuItem(
                         text = { Text(text = pilihan, color = TextPrimary) },
                         onClick = {

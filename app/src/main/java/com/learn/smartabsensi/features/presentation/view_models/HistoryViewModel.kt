@@ -96,7 +96,7 @@ class HistoryViewModel @Inject constructor(
 
     private fun getUser() {
         viewModelScope.launch {
-            val result = userRepo.getUser(uid = uid)
+            val result = userRepo.getUserData(uid = uid)
 
             result.onSuccess { user ->
                 _user.update { UserHistoryUiState.Success(user) }

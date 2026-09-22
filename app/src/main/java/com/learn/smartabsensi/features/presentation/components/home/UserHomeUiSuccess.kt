@@ -1,5 +1,6 @@
 package com.learn.smartabsensi.features.presentation.components.home
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -12,12 +13,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -32,6 +35,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -39,6 +43,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.learn.smartabsensi.R
 import com.learn.smartabsensi.core.themes.Background
 import com.learn.smartabsensi.core.themes.DarkIndigo
 import com.learn.smartabsensi.core.themes.Indigo
@@ -294,34 +299,41 @@ fun UserHomeUiSuccess(
                     )
                 }
 
-                LazyRow(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    when (val state = foodHomeUiState) {
-                        is FoodHomeUiState.IsLoading -> {
-                            item {
-                                CircularProgressIndicator()
-                            }
-                        }
 
-                        is FoodHomeUiState.Error -> {
-                            item {
-                                Text(
-                                    text = state.message
-                                )
-                            }
-                        }
+                when (val food = foodHomeUiState) {
+                    is FoodHomeUiState.IsLoading -> {
+                        CircularProgressIndicator(modifier = Modifier.fillMaxWidth())
+                    }
 
-                        is FoodHomeUiState.Success -> {
-                            state.data.forEach { food ->
-                                item {
-                                    FoodCard(
-                                        foodModel = food
-                                    )
+                    is FoodHomeUiState.Error -> {
+                        Box(
+                            modifier = Modifier.fillMaxWidth(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.not_found),
+                                contentDescription = "Not found",
+                                modifier = Modifier.size(100.dp)
+                            )
+                        }
+                    }
+
+                    is FoodHomeUiState.Success -> {
+                        LazyRow(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 16.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            food.data.forEach {
+                                if (it.id == userData.favoriteFood.id) {
+                                    item {
+                                        FoodCard(
+                                            foodModel = it,
+                                            vm = hvm
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -355,7 +367,7 @@ fun UserHomeUiSuccess(
             hostState = snackbarHostState,
             modifier = Modifier
                 .align(Alignment.TopCenter)
-                .statusBarsPadding()
+//                .statusBarsPadding()
                 .padding(top = 20.dp)
         )
     }

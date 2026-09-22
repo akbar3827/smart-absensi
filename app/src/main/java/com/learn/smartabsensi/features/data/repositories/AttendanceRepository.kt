@@ -2,6 +2,7 @@ package com.learn.smartabsensi.features.data.repositories
 
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
+import com.learn.smartabsensi.core.networkings.TabelName
 import com.learn.smartabsensi.features.data.models.AttendanceModel
 import kotlinx.coroutines.tasks.await
 import java.time.LocalDate
@@ -13,14 +14,10 @@ import javax.inject.Inject
 class AttendanceRepository @Inject constructor(
     val db: FirebaseFirestore
 ) {
-    companion object {
-        val COLLECTION_NAME = "attendance"
-    }
-
     suspend fun getAttendances(uid: String, period: String): Result<List<AttendanceModel>> {
         return try {
             val snapshot = db
-                .collection(COLLECTION_NAME)
+                .collection(TabelName._ATTENDANCE_)
                 .whereEqualTo("uid", uid)
                 .whereEqualTo("period", period)
                 .get()
@@ -57,7 +54,7 @@ class AttendanceRepository @Inject constructor(
             val docId = "${uid}_$dateKey"
 
             val attendanceRef = db
-                .collection(COLLECTION_NAME)
+                .collection(TabelName._ATTENDANCE_)
                 .document(docId)
 
 

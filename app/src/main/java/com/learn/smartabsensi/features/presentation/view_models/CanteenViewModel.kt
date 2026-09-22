@@ -3,6 +3,7 @@ package com.learn.smartabsensi.features.presentation.view_models
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
+import com.learn.smartabsensi.features.data.models.FoodFavModel
 import com.learn.smartabsensi.features.data.models.FoodModel
 import com.learn.smartabsensi.features.data.models.UserModel
 import com.learn.smartabsensi.features.data.repositories.FoodRepository
@@ -43,6 +44,27 @@ class CanteenViewModel @Inject constructor(
         _typeFood.value = string
     }
 
+    private val _selectedFood =
+        MutableStateFlow<FoodModel?>(null)
+    val selectedFood = _selectedFood.asStateFlow()
+    fun selectedFoodChanged(v: FoodModel) {
+        _selectedFood.value = v
+    }
+
+    private val _bottomBarShowed =
+        MutableStateFlow(false)
+    val bottomBarShowed = _bottomBarShowed.asStateFlow()
+    fun bottomBarShowedChanged(v: Boolean) {
+        _bottomBarShowed.value = v
+    }
+
+    private val _orderQuantity =
+        MutableStateFlow(1)
+    val orderQuantity = _orderQuantity.asStateFlow()
+    fun orderQuantityChanged(v: Int) {
+        _orderQuantity.value = v
+    }
+
     init {
         getFood()
         getUser()
@@ -50,13 +72,28 @@ class CanteenViewModel @Inject constructor(
 
     fun getUser() {
         viewModelScope.launch {
-            val result = userRepo.getUser(uid)
+            val result = userRepo.getUserData(uid)
 
             result.onSuccess { user ->
                 _user.update { CanteenUserUiState.Success(user) }
             }.onFailure { throwable ->
                 _user.update { CanteenUserUiState.Error(throwable.message ?: "") }
             }
+        }
+    }
+
+    fun updateFavoriteFood(
+        food: FoodModel
+    ) {
+        val updateData = mutableMapOf<String, Any>(
+            "favoriteFood" to FoodFavModel(id = food.id, name = food.name)
+        )
+
+        viewModelScope.launch {
+            userRepo.updateUserData(
+                uid = uid,
+                data = updateData
+            )
         }
     }
 

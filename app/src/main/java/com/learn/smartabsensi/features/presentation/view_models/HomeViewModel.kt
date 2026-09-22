@@ -9,6 +9,7 @@ import com.learn.smartabsensi.core.themes.Indigo
 import com.learn.smartabsensi.features.data.models.ArticleResponse
 import com.learn.smartabsensi.features.data.models.ArticlesItem
 import com.learn.smartabsensi.features.data.models.AttendanceModel
+import com.learn.smartabsensi.features.data.models.FoodFavModel
 import com.learn.smartabsensi.features.data.models.FoodModel
 import com.learn.smartabsensi.features.data.models.NewsModel
 import com.learn.smartabsensi.features.data.models.UserModel
@@ -23,7 +24,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
-import java.time.LocalDate
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Date
@@ -124,9 +124,16 @@ class HomeViewModel @Inject constructor(
 
     private var _news =
         MutableStateFlow(emptyList<ArticlesItem?>())
+
     val news = _news.asStateFlow()
     fun onNewsChanged(news: List<ArticlesItem?>) {
         _news.value = news
+    }
+
+    private val _capturedImage = MutableStateFlow<android.graphics.Bitmap?>(null)
+    val capturedImage = _capturedImage.asStateFlow()
+    fun onImageCaptured(bitmap: android.graphics.Bitmap?) {
+        _capturedImage.value = bitmap
     }
 
     init {
@@ -141,7 +148,7 @@ class HomeViewModel @Inject constructor(
     fun loadUser() {
         viewModelScope.launch {
 
-            val result = userRepository.getUser(uid = uid)
+            val result = userRepository.getUserData(uid = uid)
 
             result.onSuccess { userModel ->
                 _userHomeUiState.update { UserHomeUiState.Success(userModel) }
@@ -244,6 +251,21 @@ class HomeViewModel @Inject constructor(
             result.onFailure { throwable ->
                 _foodHomeUiState.update { FoodHomeUiState.Error(message = throwable.message ?: "") }
             }
+        }
+    }
+
+    fun updateFavoriteFood(
+        food: FoodModel
+    ) {
+        val updateData = mutableMapOf<String, Any>(
+            "favoriteFood" to FoodFavModel(id = food.id, name = food.name)
+        )
+
+        viewModelScope.launch {
+            userRepository.updateUserData(
+                uid = uid,
+                data = updateData
+            )
         }
     }
 }

@@ -1,19 +1,17 @@
 package com.learn.smartabsensi.features.data.repositories
 
 import com.google.firebase.firestore.FirebaseFirestore
+import com.learn.smartabsensi.core.networkings.TabelName
 import com.learn.smartabsensi.features.data.models.UserModel
 import kotlinx.coroutines.tasks.await
 
 class UsersRepository {
-    companion object {
-        val COLLECTION_NAME = "users"
-    }
     private val db = FirebaseFirestore.getInstance()
 
     suspend fun getUsers(): Result<List<UserModel>> {
         return try {
             val snapshot = db
-                .collection(COLLECTION_NAME)
+                .collection(TabelName._USER_)
                 .get()
                 .await()
 

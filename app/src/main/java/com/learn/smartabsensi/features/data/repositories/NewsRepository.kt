@@ -2,6 +2,7 @@ package com.learn.smartabsensi.features.data.repositories
 
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
+import com.learn.smartabsensi.core.networkings.TabelName
 import com.learn.smartabsensi.features.data.models.NewsModel
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -10,14 +11,10 @@ import javax.inject.Inject
 class NewsRepository @Inject constructor(
     private val db: FirebaseFirestore
 ) {
-    companion object {
-        val COLLECTION_NAME = "news"
-    }
-
     suspend fun getNews(): Result<List<NewsModel>> {
         return try {
             val snapshot = db
-                .collection(COLLECTION_NAME)
+                .collection(TabelName._NEWS_)
                 .get()
                 .await()
 

@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -35,7 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.learn.smartabsensi.R
 import com.learn.smartabsensi.features.data.models.VerifMethodTypeModel
-import com.learn.smartabsensi.features.presentation.components.TextField
+import com.learn.smartabsensi.features.presentation.components.MyTextField
 import com.learn.smartabsensi.features.presentation.components.home.VerifMethod
 import com.learn.smartabsensi.features.presentation.view_models.HomeViewModel
 
@@ -134,9 +133,9 @@ fun AttendanceStepTwo(
                         )
                     }
                 } else {
-                    TextField(
+                    MyTextField(
                         icon = R.drawable.ic_calendar,
-                        nameField = "Kode absensi",
+                        tabel = "Kode absensi",
                         value = attendanceCode.value,
                         defaultInnerTextField = "Masukkan kode absensi",
                         isNotMeetRequired = isNotRequired,

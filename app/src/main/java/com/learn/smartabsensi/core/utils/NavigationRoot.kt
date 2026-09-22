@@ -14,6 +14,7 @@ import com.learn.smartabsensi.features.presentation.pages.HomePage
 import com.learn.smartabsensi.features.presentation.pages.LoginPage
 import com.learn.smartabsensi.features.presentation.pages.ProfilePage
 import com.learn.smartabsensi.features.presentation.pages.RegistPage
+import com.learn.smartabsensi.features.presentation.pages.sub_pages.Basket
 import com.learn.smartabsensi.features.presentation.pages.sub_pages.ChangePasswordPage
 import com.learn.smartabsensi.features.presentation.pages.sub_pages.ChangeProfilePage
 import com.learn.smartabsensi.features.presentation.pages.sub_pages.News
@@ -115,7 +116,12 @@ fun NavigationRoot(
                 is Route.ChangeProfile -> {
                     NavEntry(key) {
                         ChangeProfilePage(
-                            user = key.user
+                            user = key.user,
+                            previousScreen = {
+                                if (backStack.size > 1) {
+                                    backStack.removeAt(backStack.size -1)
+                                }
+                            }
                         )
                     }
                 }
@@ -166,6 +172,17 @@ fun NavigationRoot(
                         ) {
                             if (backStack.size > 1) {
                                 backStack.removeAt(backStack.size - 1)
+                            }
+                        }
+                    }
+                }
+                is Route.Basket -> {
+                    NavEntry(key) {
+                        Basket(
+                            selectedFood = key.selectedFood
+                        ) {
+                            if (backStack.size > 1) {
+                                backStack.removeAt(backStack.size -1)
                             }
                         }
                     }

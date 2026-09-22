@@ -1,6 +1,8 @@
 package com.learn.smartabsensi.features.presentation.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,23 +23,30 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
 import coil3.compose.AsyncImage
+import com.learn.smartabsensi.R
 import com.learn.smartabsensi.core.themes.DarkIndigo
 import com.learn.smartabsensi.core.themes.Indigo
 import com.learn.smartabsensi.core.themes.TextPrimary
 import com.learn.smartabsensi.features.data.models.FoodModel
+import com.learn.smartabsensi.features.presentation.view_models.CanteenViewModel
+import com.learn.smartabsensi.features.presentation.view_models.HomeViewModel
 import java.text.NumberFormat
 import java.util.Locale
 
 @Composable
 fun FoodCard(
     modifier: Modifier = Modifier,
-    foodModel: FoodModel
+    foodModel: FoodModel,
+    vm: ViewModel
 ) {
+
     Column(
         modifier = modifier
             .width(170.dp)
@@ -71,8 +81,8 @@ fun FoodCard(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 6.dp,
-                    bottom = 4.dp,
+                .padding(
+                    top = 6.dp,
                     start = 8.dp,
                     end = 8.dp
                 ),
@@ -80,7 +90,8 @@ fun FoodCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Rp ${NumberFormat.getNumberInstance(Locale("id", "ID"))
+                text = "Rp ${
+                    NumberFormat.getNumberInstance(Locale("id", "ID"))
                         .format(foodModel.price)
                 }",
                 color = Indigo,
@@ -89,7 +100,6 @@ fun FoodCard(
             )
             Box(
                 modifier = Modifier
-                    .size(25.dp)
                     .shadow(
                         elevation = 4.dp,
                         clip = false,
@@ -97,14 +107,25 @@ fun FoodCard(
                         spotColor = Indigo.copy(alpha = 0.6f)
                     )
                     .clip(RoundedCornerShape(8.dp))
-                    .background(Indigo),
+                    .background(Indigo)
+                    .padding(horizontal = 6.dp)
+                    .clickable {
+                        when (vm) {
+                            is CanteenViewModel -> {
+                                vm.updateFavoriteFood(foodModel)
+                            }
+                            is HomeViewModel -> {
+                                vm.updateFavoriteFood(foodModel)
+                            }
+                        }
+                    },
                 contentAlignment = Alignment.Center
             ) {
-                Text(
-                    text = "+",
-                    color = Color.White,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
+                Icon(
+                    painter = painterResource(id = R.drawable.love),
+                    contentDescription = "favorite",
+                    tint = Color.White,
+                    modifier = Modifier.size(15.dp).padding(vertical = 4.dp)
                 )
             }
         }

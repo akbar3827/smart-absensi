@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
@@ -21,10 +22,16 @@ import androidx.compose.ui.unit.dp
 import com.learn.smartabsensi.R
 import com.learn.smartabsensi.core.themes.TextSecondary
 
+import androidx.compose.foundation.clickable
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
+import android.graphics.Bitmap
+
 @Composable
 fun Proof(
     modifier: Modifier = Modifier,
-    color: Color
+    color: Color,
+    bitmap: Bitmap? = null
 ) {
     Box(
         modifier = modifier
@@ -34,24 +41,33 @@ fun Proof(
             .background(color = color.copy(alpha = 0.1f), shape = RoundedCornerShape(18.dp)),
         contentAlignment = Alignment.Center
     ) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+        if (bitmap != null) {
             Image(
-                painter = painterResource(id = R.drawable.camera),
-                contentDescription = null,
-                modifier = Modifier.size(40.dp)
+                bitmap = bitmap.asImageBitmap(),
+                contentDescription = "Captured Image",
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
             )
-            Text(
-                text = "Tambahkan foto selfie sebagai bukti",
-                color = color,
-                fontWeight = FontWeight.Bold
-            )
-            Text(
-                text = "JGP, PNG, PDF ── Maks.5MB",
-                color = TextSecondary,
-            )
+        } else {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.camera),
+                    contentDescription = null,
+                    modifier = Modifier.size(40.dp)
+                )
+                Text(
+                    text = "Tambahkan foto selfie sebagai bukti",
+                    color = color,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = "JPG, PNG, PDF ── Maks.5MB",
+                    color = TextSecondary,
+                )
+            }
         }
     }
 }

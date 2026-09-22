@@ -2,6 +2,7 @@ package com.learn.smartabsensi.core.utils
 
 import androidx.navigation3.runtime.NavKey
 import com.learn.smartabsensi.features.data.models.ArticlesItem
+import com.learn.smartabsensi.features.data.models.FoodModel
 import com.learn.smartabsensi.features.data.models.UserModel
 import kotlinx.serialization.Serializable
 
@@ -45,5 +46,7 @@ sealed interface Route : NavKey {
     ) : Route
     @Serializable
     data class News(val news: ArticlesItem) : Route
+    @Serializable
+    data class Basket(val selectedFood: MutableList<FoodModel>) : Route
 
 }

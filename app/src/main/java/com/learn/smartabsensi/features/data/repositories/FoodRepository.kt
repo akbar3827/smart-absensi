@@ -2,6 +2,7 @@ package com.learn.smartabsensi.features.data.repositories
 
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
+import com.learn.smartabsensi.core.networkings.TabelName
 import com.learn.smartabsensi.features.data.models.FoodModel
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -10,10 +11,6 @@ import javax.inject.Inject
 class FoodRepository @Inject constructor(
     private val db: FirebaseFirestore
 ) {
-    companion object {
-        private val COLLECTION_NAME = "canteen_food"
-    }
-
     suspend fun getFood(
         typeFood: String? = null,
         search: String? = null
@@ -22,19 +19,19 @@ class FoodRepository @Inject constructor(
 
             val snapshot =
                 if (!search.isNullOrBlank() && !typeFood.isNullOrBlank() && !typeFood.equals("semua", ignoreCase = true)) {
-                    db.collection(COLLECTION_NAME).whereEqualTo("type", typeFood.lowercase().trim())
+                    db.collection(TabelName._CANTEEN_FOOD_).whereEqualTo("type", typeFood.lowercase().trim())
                         .whereEqualTo("productName", search.lowercase().trim())
                         .get().await()
                 } else if (!search.isNullOrBlank()) {
-                    db.collection(COLLECTION_NAME)
+                    db.collection(TabelName._CANTEEN_FOOD_)
                         .whereGreaterThanOrEqualTo("productName", search.lowercase().trim()).get()
                         .await()
                 } else if (!typeFood.isNullOrBlank() && !typeFood.equals("semua", ignoreCase = true)) {
-                    db.collection(COLLECTION_NAME)
+                    db.collection(TabelName._CANTEEN_FOOD_)
                         .whereEqualTo("type", typeFood.lowercase().trim()).get()
                         .await()
                 } else {
-                    db.collection(COLLECTION_NAME).get().await()
+                    db.collection(TabelName._CANTEEN_FOOD_).get().await()
                 }
 
             val food = snapshot.documents.mapNotNull {
@@ -42,7 +39,7 @@ class FoodRepository @Inject constructor(
             }
             Result.success(food)
         } catch (e: Exception) {
-            Log.e("FoodRepository", "Error fetching $COLLECTION_NAME: ${e.message}")
+            Log.e("FoodRepository", "Error fetching ${TabelName._CANTEEN_FOOD_}: ${e.message}")
             Result.failure(e)
         }
     }

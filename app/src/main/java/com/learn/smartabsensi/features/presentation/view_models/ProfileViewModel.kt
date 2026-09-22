@@ -1,5 +1,6 @@
 package com.learn.smartabsensi.features.presentation.view_models
 
+import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
@@ -52,8 +53,7 @@ class ProfileViewModel @Inject constructor(
 
     fun loadUser() {
        viewModelScope.launch {
-           val result = userRepository.getUser(uid = uid)
-
+           val result = userRepository.getUserData(uid = uid)
            result.onSuccess { user ->
                _userProfileUiState.update { UserProfileUiState.Success(data = user) }
            }.onFailure { throwable ->

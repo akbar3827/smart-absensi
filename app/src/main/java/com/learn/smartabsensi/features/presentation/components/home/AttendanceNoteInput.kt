@@ -84,7 +84,7 @@ fun AttendanceNoteInput(
             Box(modifier = Modifier) {
                 if (attendanceNote.isEmpty()) {
                     Text(
-                        text = "Jelaskan keperluan dispensasi...",
+                        text = "Jelaskan jika perlu",
                         color = Color.Gray.copy(alpha = 0.5f),
                         fontSize = 16.sp
                     )

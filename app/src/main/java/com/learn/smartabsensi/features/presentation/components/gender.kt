@@ -30,10 +30,13 @@ import com.learn.smartabsensi.core.themes.TextPrimary
 @Composable
 fun Gender(
     modifier: Modifier = Modifier,
+    initialGender: String = "pria",
     onGenderChanged: (String) -> Unit
 ) {
     val genderOptions = listOf("pria", "perempuan")
-    var selected by remember { mutableStateOf(0) }
+    var selected by remember(initialGender) {
+        mutableStateOf(if (initialGender.lowercase() == "perempuan") 1 else 0)
+    }
     SingleChoiceSegmentedButtonRow(
         modifier = modifier.fillMaxWidth(),
         space = -8.dp

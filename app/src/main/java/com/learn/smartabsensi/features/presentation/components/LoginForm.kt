@@ -72,9 +72,9 @@ fun LoginForm(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        TextField(
+        MyTextField(
             icon = R.drawable.ic_email,
-            nameField = "Email",
+            tabel = "Email",
             value = email,
             defaultInnerTextField = "smartabsen@gmail.com",
             isNotMeetRequired = errorEmail,

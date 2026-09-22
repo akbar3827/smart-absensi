@@ -1,6 +1,7 @@
 package com.learn.smartabsensi.features.data.repositories
 
 import com.google.firebase.firestore.FirebaseFirestore
+import com.learn.smartabsensi.core.networkings.TabelName
 import com.learn.smartabsensi.features.data.models.UserModel
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -8,10 +9,6 @@ import javax.inject.Inject
 class RegistRepository @Inject constructor(
     private val db: FirebaseFirestore
 ) {
-    companion object {
-        val COLLECTION_NAME = "students"
-    }
-
     suspend fun setUser(
         name: String,
         nickname: String,
@@ -24,7 +21,7 @@ class RegistRepository @Inject constructor(
         gender: String,
         createdAt: String
     ) {
-        db.collection(COLLECTION_NAME)
+        db.collection(TabelName._USER_)
             .document(uid)
             .set(
                 UserModel(

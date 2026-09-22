@@ -1,18 +1,19 @@
 package com.learn.smartabsensi.features.presentation.components.home.stepper
 
-import androidx.compose.foundation.Image
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.launch
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,37 +24,29 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.learn.smartabsensi.R
-import com.learn.smartabsensi.core.themes.Background
 import com.learn.smartabsensi.core.themes.TextPrimary
-import com.learn.smartabsensi.core.themes.TextSecondary
 import com.learn.smartabsensi.features.data.models.UserModel
 import com.learn.smartabsensi.features.presentation.components.home.KindOfProof
 import com.learn.smartabsensi.features.presentation.components.home.Proof
 import com.learn.smartabsensi.features.presentation.components.home.SummaryAttendance
 import com.learn.smartabsensi.features.presentation.view_models.HomeViewModel
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -70,6 +63,22 @@ fun AttendanceStepThree(
     sheetState: SheetState,
     onShowBottomSheetChanged: (Boolean) -> Unit
 ) {
+    val context = LocalContext.current
+    val capturedImage by hvm.capturedImage.collectAsStateWithLifecycle()
+
+    val cameraLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicturePreview()
+    ) { bitmap ->
+        hvm.onImageCaptured(bitmap)
+    }
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            cameraLauncher.launch()
+        }
+    }
 
     LazyColumn(
         modifier = modifier.fillMaxWidth(),
@@ -83,12 +92,12 @@ fun AttendanceStepThree(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Foto Selfie (Opsional)",
+                    text = "Foto Selfie (Wajib)",
                     color = TextPrimary,
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = "Opsional",
+                    text = "Wajib",
                     color = color,
                     fontWeight = FontWeight.Bold,
                     fontSize = 14.sp,
@@ -100,14 +109,32 @@ fun AttendanceStepThree(
             }
 
             Spacer(Modifier.height(16.dp))
-            Proof(color = color)
+            Proof(
+                color = color,
+                bitmap = capturedImage
+            )
             Spacer(Modifier.height(16.dp))
-            KindOfProof()
+            KindOfProof(
+                onClick = {
+                    val permissionCheckResult = ContextCompat.checkSelfPermission(
+                        context,
+                        Manifest.permission.CAMERA
+                    )
+                    if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
+                        cameraLauncher.launch()
+                    } else {
+                        permissionLauncher.launch(Manifest.permission.CAMERA)
+                    }
+                }
+            )
             Spacer(Modifier.height(20.dp))
             SummaryAttendance(
                 color = color,
                 kindOfAttendance = kindOfAttendance,
                 attendanceMethod = attendanceMethod
+            )
+            Text(
+                text = capturedImage.toString()
             )
             Spacer(Modifier.height(16.dp))
 
@@ -147,11 +174,15 @@ fun AttendanceStepThree(
 
                 Button(
                     onClick = {
+                        if (capturedImage == null) {
+                            return@Button
+                        }
                         hvm.setAttendance(
                             name = user.name,
                             status = status,
                             classRoom = user.classRoom
                         )
+                        hvm.onImageCaptured(null)
                         scope.launch { sheetState.hide() }.invokeOnCompletion {
                             onShowBottomSheetChanged(false)
                         }

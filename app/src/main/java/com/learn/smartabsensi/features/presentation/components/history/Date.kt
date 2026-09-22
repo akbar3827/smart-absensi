@@ -80,7 +80,6 @@ fun Date(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .height(350.dp)
             .shadow(
                 elevation = 4.dp,
                 clip = false,
